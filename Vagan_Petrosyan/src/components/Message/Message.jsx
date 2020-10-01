@@ -1,19 +1,43 @@
 import React from "react";
 import cn from "classnames";
+import {Box, makeStyles} from "@material-ui/core";
+import PropTypes from "prop-types";
 
-const Message = ({ author, message, className }) => {
+const useStyles = makeStyles(theme => ({
+    messageClass: {
+        borderRadius: 4,
+        padding: theme.spacing(1),
+        color: theme.palette.common.white,
+    },
+    author: {
+        marginLeft: 'auto',
+        backgroundColor: theme.palette.primary.light,
 
+    },
+    bot: {
+        marginRight: 'auto',
+        backgroundColor: theme.palette.primary.dark,
+    },
+}));
+const Message = ({ author, message }) => {
+    const classes = useStyles();
     return (
-        <li className = {cn('list', {
-            authorBot: author === 'Bot',
-            author: author !== 'Bot',
-            className,
+        <Box
+            component="li"
+            className = {cn(classes.messageClass, {
+                [classes.author]: author !== 'Bot',
+                [classes.bot]: author === 'Bot',
         })}
         >
             <span>{ `${author}: ${message}` }</span>
-        </li>
+        </Box>
     );
 };
+
+Message.propTypes = {
+    author: PropTypes.string.isRequired,
+    message: PropTypes.string.isRequired,
+}
 
 export default Message;
 

@@ -12,10 +12,10 @@ import {
 } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import cn from 'classnames';
+import { NavLink, Link } from 'react-router-dom';
+import mockChats from './mockChats';
 
 const useStyles = makeStyles(theme => ({
     drawerPaper: {
@@ -37,6 +37,9 @@ const useStyles = makeStyles(theme => ({
     secondList: {
         marginTop: 'auto',
     },
+    active: {
+        textDecoration: 'none',
+    },
 }));
 
 const ChatList = () => {
@@ -57,44 +60,28 @@ const ChatList = () => {
             </div>
             <Divider />
             <List>
-                <div>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <DashboardIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Chat 1" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <ShoppingCartIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Chat 2" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <PeopleIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Chat 3" />
-                    </ListItem>
-                </div>
+                {mockChats.map(({ id, name }) => (
+                    <NavLink key={id} to={`/chats/${id}`} activeClassName={classes.active}>
+                        <ListItem button>
+                            <ListItemIcon>
+                                <DashboardIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={name} />
+                        </ListItem>
+                    </NavLink>
+                ))}
             </List>
             <Divider className={classes.secondList} />
             <List>
-                <div>
-                    <ListSubheader inset>Saved reports</ListSubheader>
+                <ListSubheader inset>Saved reports</ListSubheader>
+                <Link to="/about">
                     <ListItem button>
                         <ListItemIcon>
                             <AssignmentIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Settings" />
+                        <ListItemText primary="About" />
                     </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <AssignmentIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Log out" />
-                    </ListItem>
-                </div>
+                </Link>
             </List>
         </Drawer>
     );

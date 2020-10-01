@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-import HelloMessage from "./components/Layout";
+import MyApp from "./components/MyApp";
 
 
-ReactDOM.render(<HelloMessage />, document.getElementById("root"));
+ReactDOM.render(<MyApp />, document.getElementById("root"));

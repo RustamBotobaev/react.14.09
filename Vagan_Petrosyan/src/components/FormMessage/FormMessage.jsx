@@ -3,15 +3,15 @@ import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from '@material-ui/core/styles';
 
+
 const styles = theme => ({
-        root: {
+    root: {
         display: 'flex',
         flexDirection: 'column',
-        margin: theme.spacing(4),
+        marginTop: theme.spacing(4),
         padding: theme.spacing(2),
-        },
-    }
-);
+    },
+});
 
 class FormMessage extends Component {
     state = {
@@ -38,17 +38,20 @@ class FormMessage extends Component {
         const { author, message } = this.state
         return (
             <form className={classes.root} onSubmit={this.onSubmit}>
-                <TextField placeholder='author' name='author' />
-                <div>
-                    <label>
-                        <span>Author: </span>
-                        <input type="text" name="author" onChange={this.onChange} value={author} />
-                    </label>
-                </div>
-                <div>
-                    <span>Text: </span>
-                    <input type="text" name="message" onChange={this.onChange} value={message} />
-                </div>
+                <TextField
+                    label='author'
+                    name='author'
+                    onChange={this.onChange}
+                    value={author}
+                    autoComplete="off"
+                />
+                <TextField
+                    label='Text message'
+                    name='message'
+                    onChange={this.onChange}
+                    value={message}
+                    autoComplete="off"
+                />
                 <button type="submit">Add</button>
             </form>
 

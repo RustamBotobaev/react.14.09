@@ -1,57 +1,41 @@
-import React, {Component} from "react";
-import { v4 as uuidv4 } from 'uuid';
-import FormMessage from "../FormMessage";
+import React from "react";
 import Header from "../Header";
-import Message from "../Message";
 import ChatList from "../ChatList";
 import {withStyles} from "@material-ui/core/styles";
+import PropTypes from 'prop-types';
+import {Container} from "@material-ui/core";
 
-const styles = {
+const styles = theme => ({
     root: {
         display: 'flex',
         minHeight: '100vh',
     },
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        marginTop: theme.spacing(9),
+    },
+});
+
+const Layout = ({children, classes}) => {
+    return (
+        <div className={classes.root}>
+            <Header />
+            <ChatList />
+            <Container maxWidth="md" classes={{root: classes.container}}>
+                {children}
+            </Container>
+        </div>
+    );
 };
-class HelloMessage extends Component {
-    state = {
-        messages: [
-            {
-                id: uuidv4(),
-                author: "Bot",
-                message: "Привет! я Bot",
-            },
-        ],
-    };
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const {messages} = this.state;
-        if (messages.length % 2 === 0 ) {
-            setTimeout(() => {
-                this.addMessage({author: "Bot", message: "Привет я Бот"})
-            }, 500);
-        }
-    }
 
-    addMessage = ( message ) => {
-        const { messages } = this.state;
-        this.setState({ messages: [...messages, { ...message, id: uuidv4() }]});
-    };
+Layout.protoTypes = {
+    children: PropTypes.element.isRequired,
+    classes: PropTypes.shape({
+        root: PropTypes.string,
+        container: PropTypes.string,
+    }).isRequired,
+};
 
-    render() {
-        const {classes} = this.props;
-        const { messages } = this.state;
-
-        return (
-            <div className={classes.root}>
-                <Header />
-                <ChatList />
-                <ul className="list">
-                    {messages.map(( {id, author, message}) => (
-                        <Message key={id} author={author} message={message} />
-                    ))}
-                </ul>
-                <FormMessage addMessage={this.addMessage} />
-            </div>
-        );
-    }
-}
-export default withStyles(styles)(HelloMessage);
+export default withStyles(styles)(Layout);

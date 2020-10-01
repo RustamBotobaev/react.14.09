@@ -14,6 +14,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PeopleIcon from '@material-ui/icons/People';
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
         drawerPaper: {
@@ -32,6 +33,9 @@ const useStyles = makeStyles(theme => ({
         padding: '0 8px',
         ...theme.mixins.toolbar,
         },
+        secondList: {
+            marginTop: 'auto',
+        }
     }
 ));
 
@@ -53,44 +57,36 @@ const ChatList = () => {
             </div>
             <Divider />
             <List>
-                <div>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <DashboardIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Dashboard" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <ShoppingCartIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Orders" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <PeopleIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Customers" />
-                    </ListItem>
-                </div>
+                <ListItem button>
+                    <ListItemIcon>
+                        <DashboardIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Chat 1" />
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon>
+                        <ShoppingCartIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Chat 2" />
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon>
+                        <PeopleIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Chat 3" />
+                </ListItem>
             </List>
-            <Divider />
+            <Divider className={classes.secondList} />
             <List>
-                <div>
-                    <ListSubheader inset>Saved reports</ListSubheader>
+                <ListSubheader inset>Saved reports</ListSubheader>
+                <Link to="/about">
                     <ListItem button>
                         <ListItemIcon>
                             <AssignmentIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Current month" />
+                        <ListItemText primary="About" />
                     </ListItem>
-                    <ListItem button>
-                        <ListItemIcon>
-                            <AssignmentIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Last quarter" />
-                    </ListItem>
-                </div>
+                </Link>
             </List>
         </Drawer>
     );

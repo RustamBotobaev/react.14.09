@@ -1,0 +1,16 @@
+h2 {
+    color: blue;
+}
+
+.list {
+    color: cornflowerblue;
+    list-style: none;
+}
+
+.author-bot {
+    margin-left: auto;
+}
+
+.author {
+    color: darkcyan;
+}
