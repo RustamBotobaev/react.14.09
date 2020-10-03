@@ -31,15 +31,14 @@ const useStyles = makeStyles(theme => ({
 const Message = ({ message, author }) => {
   const classes = useStyles();
 
+  const itemClasses = cn(classes.message, { [classes.messageBot]: author === 'Bot' });
+  const authorClasses = cn(classes.authorName, classes.text, {
+    [classes.authorBot]: author === 'Bot',
+  });
+
   return (
-    <li className={cn(classes.message, { [classes.messageBot]: author === 'Bot' })}>
-      <span
-        className={cn(classes.authorName, classes.text, {
-          [classes.authorBot]: author === 'Bot',
-        })}
-      >
-        {author}
-      </span>
+    <li className={itemClasses}>
+      <span className={authorClasses}>{author}</span>
       <span className={classes.text}>{message}</span>
     </li>
   );
