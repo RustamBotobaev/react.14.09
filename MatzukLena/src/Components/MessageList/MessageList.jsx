@@ -2,6 +2,9 @@ import React from 'react';
 import Message from "../Message";
 import PropTypes from 'prop-types';
 import { Box, makeStyles } from '@material-ui/core';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 
 const useStyles = makeStyles(theme => ({
     list: {
@@ -18,7 +21,11 @@ const useStyles = makeStyles(theme => ({
 
 const MessageList = ({ messages}) => {
     const classes = useStyles();
-
+    // const { id } = useParams();
+    // const chats = useSelector(state => state.chats.byIds);
+    // const messagesFromRedux = useSelector(state => state.messages.byIds);
+    //
+    // const messageList = (chats[id]?.messageList ?? []).map(idx => messagesFromRedux[idx]);
     return (
         <Box component="ul" className={classes.list}>
             {messages.map(({ id, author, message }) => (
@@ -29,11 +36,12 @@ const MessageList = ({ messages}) => {
 }
 
 MessageList.propTypes = {
-    messages: PropTypes.arrayOf(PropTypes.shape ({
+    messages: PropTypes.arrayOf(
+        PropTypes.shape ({
          id: PropTypes.string,
          author: PropTypes.string,
          message: PropTypes.string,
     })).isRequired ,
 }
 
-export default MessageList
+export default MessageList;

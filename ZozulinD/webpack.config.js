@@ -27,10 +27,12 @@ module.exports = {
       },
     ],
   },
+  devtool: 'source-map',
   devServer: {
     contentBase: path.join(__dirname, 'build'),
     compress: true,
     port: 9000,
+    hot: true,
     historyApiFallback: true,
   },
   plugins: [new HtmlWebpackPlugin({ template: './src/index.html' })],

@@ -3,6 +3,8 @@ import cn from 'classnames';
 import { AppBar, Badge, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import { useSelector } from 'react-redux';
+import { getFullName } from '../../profile';
 
 const useStyles = makeStyles(theme => ({
     appBar: {
@@ -36,6 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 const Header = () => {
     const classes = useStyles();
+    const fullName = useSelector(getFullName);
 
     return (
         <AppBar position="absolute" className={cn(classes.appBar, classes.appBarShift)}>

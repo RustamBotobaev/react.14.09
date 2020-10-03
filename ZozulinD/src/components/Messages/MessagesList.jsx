@@ -19,8 +19,8 @@ function MessagesList({ messages }) {
 
   return (
     <ul className={classes.messagesList}>
-      {messages.map(({ _id, author, message }) => {
-        return <Message key={_id} message={message} author={author} />;
+      {messages.map(({ id, author, message }) => {
+        return <Message key={id} message={message} author={author} />;
       })}
     </ul>
   );

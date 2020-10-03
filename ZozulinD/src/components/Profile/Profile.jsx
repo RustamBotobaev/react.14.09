@@ -1,9 +1,13 @@
 import React from 'react';
 
+import { useSelector } from 'react-redux';
+
 import { Typography } from '@material-ui/core';
 
 function Profile() {
-  return <Typography variant="h4">Profile name</Typography>;
+  const { name } = useSelector(state => state.profile);
+
+  return <Typography variant="h4">{name}</Typography>;
 }
 
 export default Profile;

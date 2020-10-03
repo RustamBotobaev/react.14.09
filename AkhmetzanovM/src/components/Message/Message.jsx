@@ -1,17 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, Typography } from '@material-ui/core';
+import { Box, makeStyles } from '@material-ui/core';
+import cn from 'classnames';
 
 const useStyles = makeStyles((theme) => ({
   message: {
-    borderRadius: 4,
-    padding: '4px 12px',
-    margin: '12px 0px',
-    backgroundColor: '#efefef',
-    width: 400,
+    display: 'flex',
+    padding: theme.spacing(1, 2),
+    marginTop: theme.spacing(1),
+    marginRight: 'auto',
+    maxWidth: 400,
+    borderRadius: 8,
   },
   author: {
-    color: 'gray',
+    color: theme.palette.primary.main,
+    marginRight: 4,
+  },
+  user: {
+    backgroundColor: theme.palette.divider,
+  },
+  otherusers: {
+    backgroundColor: theme.palette.info.light,
   },
 }));
 
@@ -19,12 +28,15 @@ const Message = ({ message, userName }) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.message}>
-      <Typography variant="body1">
-        <span className={classes.author}>{message.author == userName ? 'Вы' : message.author}:</span>{' '}
-        {message.messageText}
-      </Typography>
-    </div>
+    <Box
+      className={cn(classes.message, {
+        [classes.user]: message.author === userName,
+        [classes.otherusers]: message.author !== userName,
+      })}
+    >
+      <span className={classes.author}>{message.author == userName ? 'Вы: ' : `${message.author}: `}</span>{' '}
+      <span>{message.messageText}</span>
+    </Box>
   );
 };
 

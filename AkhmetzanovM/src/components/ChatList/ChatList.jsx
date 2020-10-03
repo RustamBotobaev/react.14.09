@@ -1,27 +1,65 @@
 import React from 'react';
 import cn from 'classnames';
-import { Divider, Drawer, List, ListItemIcon, makeStyles, Typography } from '@material-ui/core';
-
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItem from '@material-ui/core/ListItem';
-import PeopleIcon from '@material-ui/icons/People';
+import {
+  Drawer,
+  List,
+  makeStyles,
+  ListItemText,
+  ListItem,
+  OutlinedInput,
+  ListItemAvatar,
+  Avatar,
+  ListItemIcon,
+} from '@material-ui/core';
+import { NavLink } from 'react-router-dom';
+import { AccountCircle } from '@material-ui/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { addChatToState } from '../../actions/chatAction';
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: {
     position: 'relative',
     whiteSpace: 'nowrap',
-    width: 240,
+    width: 300,
   },
-  toolbarIcon: {
+  toolbar: {
     display: 'flex',
     alignItems: 'center',
-    padding: '0 8px',
+    padding: theme.spacing(0, 2),
+    top: 0,
+    position: 'fixed',
+    zIndex: 1100,
+    width: 299,
+    backgroundColor: '#fff',
     ...theme.mixins.toolbar,
+  },
+  search: {
+    height: 32,
+    width: '100%',
+  },
+  list: {
+    margin: theme.spacing(8, 0, 11, 0),
+    boxSizing: 'border-box',
+    height: '100vh',
+  },
+  menu: {
+    bottom: 0,
+    position: 'fixed',
+    width: 299,
+    backgroundColor: '#fff',
+    boxSizing: 'border-box',
   },
 }));
 
 const ChatList = () => {
   const classes = useStyles();
+
+  const chatList = useSelector((store) => store.chats.chatList);
+  const dispatch = useDispatch();
+
+  const addChat = () => {
+    dispatch(addChatToState());
+  };
 
   return (
     <Drawer
@@ -31,35 +69,28 @@ const ChatList = () => {
       }}
       open
     >
-      <div className={classes.toolbarIcon}>
-        <Typography component="h6" variant="h6" color="inherit" noWrap className={classes.title}>
-          Список чатов
-        </Typography>
+      <div className={classes.toolbar}>
+        <OutlinedInput type="search" className={classes.search} placeholder="Найти чат" />
       </div>
-      <List>
-        <ListItem button selected>
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Общий чат" />
+      <List className={classes.list}>
+        {Object.values(chatList).map(({ id, title }) => (
+          <ListItem button key={id} component={NavLink} to={`/chat/${id}`} activeClassName="Mui-selected">
+            <ListItemAvatar>
+              <Avatar>{title[0]}</Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={title} />
+          </ListItem>
+        ))}
+      </List>
+      <List className={classes.menu}>
+        <ListItem button onClick={addChat}>
+          <ListItemText primary="Добавить новый чат" />
         </ListItem>
-        <ListItem button>
+        <ListItem button component={NavLink} to="/profile">
           <ListItemIcon>
-            <PeopleIcon />
+            <AccountCircle />
           </ListItemIcon>
-          <ListItemText primary="Chat 2" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Chat 3" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Chat 4" />
+          <ListItemText primary="Профиль" />
         </ListItem>
       </List>
     </Drawer>

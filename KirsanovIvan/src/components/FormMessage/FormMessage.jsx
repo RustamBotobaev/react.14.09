@@ -9,8 +9,8 @@ const styles = theme => ({
     margin: theme.spacing(1, 0),
   },
   TextField: {
-    width: "100%"
-  }
+    width: '100%',
+  },
 });
 
 class FormMessage extends Component {
@@ -19,17 +19,17 @@ class FormMessage extends Component {
   };
 
   sendMessage() {
-    const {addMessage} = this.props;
-    const {message} = this.state;
+    const { addMessage } = this.props;
+    const { message } = this.state;
 
     addMessage({
-        'author': 'user',
-        'message': message
+      author: 'user',
+      message,
     });
     this.setState({
-        message: ""
+      message: '',
     });
-}
+  }
 
   onSubmit = e => {
     e.preventDefault();
@@ -65,12 +65,9 @@ class FormMessage extends Component {
           variant="filled"
           className={classes.TextField}
         />
-        <Button
-          size="medium"
-          type="submit"
-        >
-          <CreateIcon/>
-      </Button>
+        <Button size="medium" type="submit">
+          <CreateIcon />
+        </Button>
       </form>
     );
   }

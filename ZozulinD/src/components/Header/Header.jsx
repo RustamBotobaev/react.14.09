@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { useSelector } from 'react-redux';
+
 import { AppBar, Button, makeStyles, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -22,6 +24,7 @@ const useStyles = makeStyles(theme => ({
 
 const Header = () => {
   const classes = useStyles();
+  const { name } = useSelector(state => state.profile);
 
   return (
     <AppBar className={classes.appBar}>
@@ -32,7 +35,7 @@ const Header = () => {
       </Typography>
       <Button color="inherit">
         <Link to="/profile" className={classes.link}>
-          Profile
+          {name}
         </Link>
       </Button>
     </AppBar>

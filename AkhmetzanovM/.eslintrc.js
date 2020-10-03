@@ -1,10 +1,12 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true,
+    es2020: true,
+    amd: true,
+    node: true,
   },
-  extends: 'plugin:react/recommended',
   parser: 'babel-eslint',
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,

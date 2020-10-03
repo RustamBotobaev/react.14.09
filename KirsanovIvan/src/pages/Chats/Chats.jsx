@@ -1,50 +1,35 @@
 import React, { Component } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import produce from 'immer';
-import {Typography} from "@material-ui/core";
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Typography } from '@material-ui/core';
 import MessageList from '../../components/MessageList';
 import FormMessage from '../../components/FormMessage';
 import Layout from '../../components/Layout/Layout';
+import { addMessage } from '../../reducers/messagesReducer';
+
 
 class Chats extends Component {
-  state = {
-    chats: {
-      1: { id: 1, title: 'Чат 1', messageList: [1] },
-      2: { id: 2, title: 'Чат 2', messageList: [2] },
-      3: { id: 3, title: 'Чат 3', messageList: [3] },
-    },
-    messages: {
-      1: {
-        id: 1,
-        author: 'Bot',
-        message: 'Привет от бота',
-      },
-      2: {
-        id: 2,
-        author: 'Bot',
-        message: 'Давай поболтаем',
-      },
-      3: {
-        id: 3,
-        author: 'Bot',
-        message: 'Давай поболтаем, я в третьем чате',
-      },
-    },
-  };
 
-  componentDidUpdate(prevProps, prevState) {
-    const lastMessages = this.messages;
+  // componentDidUpdate() {
+  //   const lastMessages = this.messages;
 
-    if (lastMessages[lastMessages.length - 1]?.author !== 'Bot') {
-      setTimeout(() => {
-        this.addMessage({ author: 'Bot', message: 'привет, я бот' });
-      }, 500);
-    }
-  }
+  //   if (lastMessages[lastMessages.length - 1]?.author !== 'Bot') {
+  //     setTimeout(() => {
+  //       this.addMessage({ author: 'Bot', message: 'привет, я бот' });
+  //     }, 500);
+  //   }
+  // }
 
   get messages() {
-    const { id } = this.props.match.params;
-    const { chats, messages } = this.state;
+    const {
+      match: {
+        params: { id },
+      },
+      chats,
+      messages
+    } = this.props;
+
     if (id in chats) {
       return chats[id].messageList.map(messId => messages[messId]);
     }
@@ -52,7 +37,11 @@ class Chats extends Component {
   }
 
   addMessage = ({ author, message }) => {
-    const { id } = this.props.match.params;
+    const {
+      match: {
+        params: { id },
+      },
+    } = this.props;
     const newId = uuidv4();
 
     this.setState(({ chats, messages }) => ({
@@ -72,19 +61,42 @@ class Chats extends Component {
     // );
   };
 
+  addChat = () => {
+    const newId = uuidv4();
+    this.setState(({ chats }) => ({
+      chats: { ...chats, [newId]: { id: newId, title: `Чат ${newId}`, messageList: [] } },
+    }));
+  };
+
   render() {
     return (
       <Layout>
-       <Typography
-            component="div"
-            style={{ backgroundColor: "#cfe8fc", height: "80vh", padding: "20px 40px"}}
-          >
-            <MessageList messages = { this.messages} />
-          </Typography>
-          <FormMessage addMessage={this.addMessage} />
+        <Typography
+          component="div"
+          style={{ backgroundColor: '#cfe8fc', height: '80vh', padding: '20px 40px' }}
+        >
+          <MessageList messages={this.messages}/>
+        </Typography>
+        <FormMessage addMessage={this.addMessage} />
+        <button onClick={() => this.props.addMessage()}>add message</button>
       </Layout>
     );
   }
 }
 
-export default Chats;
+Chats.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.objectOf(PropTypes.any),
+  }).isRequired,
+};
+
+const mapStateToProps = state => ({
+  chats: state.chats.byIds,
+  messages: state.messages.byIds,
+});
+
+const mapDispatchToProps = {
+  addMessage
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chats);

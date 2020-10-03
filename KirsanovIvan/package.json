@@ -9,18 +9,20 @@
     "lint": "eslint --fix \"src/**/*.js?(x)\"",
     "prettier": "prettier --write \"src/**/*.js?(x)\""
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@reduxjs/toolkit": "^1.4.0",
     "classnames": "^2.2.6",
     "immer": "^7.0.9",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
+    "redux": "^4.0.5",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
@@ -42,6 +44,7 @@
     "eslint-plugin-react-hooks": "^4.1.2",
     "html-webpack-plugin": "^4.4.1",
     "mini-css-extract-plugin": "^0.11.2",
+    "prettier": "^2.1.2",
     "style-loader": "^1.2.1",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",

@@ -18,35 +18,64 @@ const styles = theme => ({
 
 class Chats extends Component {
   state = {
-    messages: [
-      {
-        id: uuidv4(),
+    chats: {
+      1: { id: 1, title: 'Chat 1', messageList: [1, 3] },
+      2: { id: 2, title: 'Chat 2', messageList: [2] },
+      3: { id: 3, title: 'Chat 3', messageList: [3] },
+    },
+    messages: {
+      1: {
+        id: 1,
         author: 'Bot',
         message: 'Я бот, чего ты от меня хочешь, кожаный мешок?',
       },
-    ],
+      2: {
+        id: 2,
+        author: 'Bot',
+        message: 'Вали отсюда!',
+      },
+      3: {
+        id: 3,
+        author: 'Bot',
+        message: 'ПиуПиу',
+      },
+    },
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    const { messages } = this.state;
-    if (messages[messages.length - 1].author !== 'Bot') {
+  componentDidUpdate() {
+    const  lastMessages = this.messages;
+    if (lastMessages[lastMessages.length - 1]?.author !== 'Bot') {
       setTimeout(() => {
         this.addMessage({ author: 'Bot', message: 'Отстань от меня!' });
       }, 1000);
     }
   }
 
-  addMessage = message => {
-    const { messages } = this.state;
+  get messages() {
+    const { id } = this.props.match.params;
+    const { chats, messages } = this.state;
+    if(id in chats) {
+      return chats[id].messageList.map(messId => messages[messId]);
+    }
+    return [];
+  }
 
-    this.setState({ messages: [...messages, { ...message, id: uuidv4() }] });
+  addMessage = ({author, message }) => {
+    const { id } = this.props.match.params;
+    const newId = uuidv4();
+    this.setState(({chats, messages}) => ({
+      chats: {
+        ...chats,
+        [id]: { ...chats[id], messageList: [...chats[id].messageList, newId] },
+      },
+      messages: { ...messages, [newId]: {id: newId, author, message } },
+    }));
   };
 
   render() {
-    const { messages } = this.state;
     return (
       <Layout>
-        <MessageList messages={messages} />
+        <MessageList messages={this.messages} />
         <MessageField addMessage={this.addMessage} />
       </Layout>
     );

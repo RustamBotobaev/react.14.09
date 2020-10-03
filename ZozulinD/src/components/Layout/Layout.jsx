@@ -1,15 +1,18 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+
+import { Provider } from 'react-redux';
 
 import { makeStyles, Container, Typography } from '@material-ui/core';
 
+import store from '../../store';
+
 import ChatList from '../ChatList';
+import CreateChat from '../ChatList/CreateChat';
 import Header from '../Header';
 import Profile from '../Profile';
 import Messages from '../Messages';
 import Router from '../Router';
-import MessagesContext, { chatsList, reducer } from '../Messages/MessagesContext';
-import CreateChat from '../ChatList/CreateChat';
 
 const useStyles = makeStyles({
   container: {
@@ -19,12 +22,11 @@ const useStyles = makeStyles({
 
 const Layout = () => {
   const classes = useStyles();
-  const [chats, dispatch] = useReducer(reducer, chatsList);
 
   return (
     <Router>
-      <Header />
-      <MessagesContext.Provider value={{ chats, dispatch }}>
+      <Provider store={store}>
+        <Header />
         <ChatList />
         <Container className={classes.container}>
           <Switch>
@@ -44,7 +46,7 @@ const Layout = () => {
             </Route>
           </Switch>
         </Container>
-      </MessagesContext.Provider>
+      </Provider>
     </Router>
   );
 };

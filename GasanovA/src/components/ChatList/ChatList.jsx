@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Button,
   Divider,
   Drawer,
   IconButton,
@@ -11,11 +12,12 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PeopleIcon from '@material-ui/icons/People';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import cn from 'classnames';
+import { Link, NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addChatToState } from '../../actions/chatActions';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
@@ -27,6 +29,17 @@ const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
+  drawerPaperClose: {
+    overflowX: 'hidden',
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    width: theme.spacing(7),
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing(9),
+    },
+  },
   toolbarIcon: {
     display: 'flex',
     alignItems: 'center',
@@ -37,64 +50,62 @@ const useStyles = makeStyles(theme => ({
   secondList: {
     marginTop: 'auto',
   },
+  active: {
+    textDecoration: 'none',
+  },
 }));
 
 const ChatList = () => {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(true);
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  const chats = useSelector(store => store.chats.byIds);
+  const dispatch = useDispatch();
+  const addChat = () => {
+    dispatch(addChatToState());
+  };
 
   return (
     <Drawer
       variant="permanent"
       classes={{
-        paper: cn(classes.drawerPaper),
+        paper: cn(classes.drawerPaper, !open && classes.drawerPaperClose),
       }}
-      open
+      open={open}
     >
       <div className={classes.toolbarIcon}>
-        <IconButton>
+        <IconButton onClick={handleDrawerClose}>
           <ChevronLeftIcon />
         </IconButton>
       </div>
       <Divider />
       <List>
-        <div>
-          <ListItem button>
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Chat 1" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Chat 2" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Chat 3" />
-          </ListItem>
-        </div>
+        {Object.values(chats).map(({ id, tittle }) =>(
+          <NavLink key={id} to={`/chats/${id}`} activeClassName={classes.active}>
+            <ListItem button>
+              <ListItemIcon>
+                <PeopleIcon />
+              </ListItemIcon>
+              <ListItemText primary={tittle} />
+            </ListItem>
+          </NavLink>
+        ))}
       </List>
+      <Button onClick={addChat}>add chats</Button>
       <Divider className={classes.secondList} />
       <List>
-        <div>
-          <ListSubheader inset>Saved reports</ListSubheader>
+        <ListSubheader inset>Saved reports</ListSubheader>
+        <Link to="/about">
           <ListItem button>
             <ListItemIcon>
               <AssignmentIcon />
             </ListItemIcon>
-            <ListItemText primary="Settings" />
+            <ListItemText primary="About" />
           </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <AssignmentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Log out" />
-          </ListItem>
-        </div>
+        </Link>
       </List>
     </Drawer>
   );

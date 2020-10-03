@@ -1,8 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
+
+import { useDispatch } from 'react-redux';
 
 import { Button, makeStyles, TextField } from '@material-ui/core';
 
-import MessagesContext from '../Messages/MessagesContext';
+import { addChat } from '../../features/messages/messagesSlice';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -18,8 +20,7 @@ const useStyles = makeStyles(theme => ({
 
 const CreateChat = () => {
   const classes = useStyles();
-
-  const { dispatch } = useContext(MessagesContext);
+  const dispatch = useDispatch();
 
   const [chatName, setChatName] = useState('');
 
@@ -45,7 +46,7 @@ const CreateChat = () => {
     e.preventDefault();
 
     if (testInputs()) {
-      dispatch({ type: 'addChat', value: { chatName } });
+      dispatch(addChat({ chatName }));
 
       clearInputs();
     }
