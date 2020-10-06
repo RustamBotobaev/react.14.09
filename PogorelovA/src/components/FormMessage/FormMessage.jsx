@@ -30,6 +30,7 @@ class FormMessage extends Component {
     e.preventDefault();
     const { addMessage } = this.props;
     addMessage(this.state);
+    this.setState({ message: '' });
   };
 
   onChange = ({ target }) => {

@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Box, makeStyles, Typography } from '@material-ui/core';
-import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import Message from '../Message';
 
 const useStyles = makeStyles(theme => ({
@@ -11,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     listStyle: 'none',
     marggin: 0,
-    maxHeight: 500,
+    maxHeight: 200,
     overflow: 'auto',
     border: '1px solid #333',
     width: '100%',
@@ -26,13 +24,13 @@ const MessageList = ({ messages, activeMessages }) => {
   const classes = useStyles();
   listRef = useRef();
 
-  // useEffect(() => {
-  //   const { current } = listRef;
+  useEffect(() => {
+    const { current } = listRef;
 
-  //   if (current) {
-  //     current.scrollTo(messages.length * 36, 0);
-  //   }
-  // }, [messages]);
+    if (current) {
+      current.scrollTo(0, messages.length * 36);
+    }
+  }, [messages]);
 
   return (
     <Box ref={listRef} component="ul" className={classes.list}>
