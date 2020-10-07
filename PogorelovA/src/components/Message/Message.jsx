@@ -18,9 +18,12 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.dark,
     marginRight: 'auto',
   },
+  active: {
+    backgroundColor: theme.palette.primary.light,
+  },
 }));
 
-const Message = ({ author, message }) => {
+const Message = ({ author, message, isActive }) => {
   const classes = useStyles();
 
   return (
@@ -29,6 +32,7 @@ const Message = ({ author, message }) => {
       className={cn(classes.messageClass, {
         [classes.author]: author !== 'Bot',
         [classes.bot]: author === 'Bot',
+        [classes.active]: isActive,
       })}
     >
       <span>{`${author}: ${message}`}</span>
@@ -39,6 +43,7 @@ const Message = ({ author, message }) => {
 Message.propTypes = {
   author: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
+  isActive: PropTypes.bool.isRequired,
 };
 
 export default Message;

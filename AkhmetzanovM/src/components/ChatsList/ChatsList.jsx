@@ -14,7 +14,8 @@ import {
 import { NavLink } from 'react-router-dom';
 import { AccountCircle } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { addChatToState } from '../../actions/chatAction';
+import { addChatToState } from '../../reducers/chatReducer';
+import { getChatsList } from '../../selectors/chatsSelector';
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: {
@@ -51,10 +52,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChatList = () => {
+const ChatsList = () => {
   const classes = useStyles();
 
-  const chatList = useSelector((store) => store.chats.chatList);
+  const chatsList = useSelector(getChatsList);
   const dispatch = useDispatch();
 
   const addChat = () => {
@@ -73,7 +74,7 @@ const ChatList = () => {
         <OutlinedInput type="search" className={classes.search} placeholder="Найти чат" />
       </div>
       <List className={classes.list}>
-        {Object.values(chatList).map(({ id, title }) => (
+        {chatsList.map(({ id, title }) => (
           <ListItem button key={id} component={NavLink} to={`/chat/${id}`} activeClassName="Mui-selected">
             <ListItemAvatar>
               <Avatar>{title[0]}</Avatar>
@@ -97,4 +98,4 @@ const ChatList = () => {
   );
 };
 
-export default ChatList;
+export default ChatsList;

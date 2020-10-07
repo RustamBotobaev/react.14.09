@@ -1,8 +1,7 @@
 import React from 'react';
-import Message from '../Message/Message';
+import Message from '../Message';
 import PropTypes from 'prop-types';
 import { Container, makeStyles } from '@material-ui/core';
-import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -16,13 +15,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MessageList = ({ currentChatId }) => {
+const MessageList = ({ messages, userName }) => {
   const classes = useStyles();
-
-  const chatList = useSelector((store) => store.chats.chatList);
-  const userName = useSelector((store) => store.chats.userName);
-  const messageList = useSelector((store) => Object.values(store.chats.messageList));
-  const messages = chatList[currentChatId].messageIdList.map((messageId) => messageList[messageId]);
 
   return (
     <Container className={classes.list}>
@@ -34,8 +28,14 @@ const MessageList = ({ currentChatId }) => {
 };
 
 MessageList.propTypes = {
-  currentChatId: PropTypes.string.isRequired,
-  // userName: PropTypes.string.isRequired,
+  userName: PropTypes.string.isRequired,
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.any,
+      author: PropTypes.string,
+      message: PropTypes.string,
+    }),
+  ).isRequired,
 };
 
 export default MessageList;
