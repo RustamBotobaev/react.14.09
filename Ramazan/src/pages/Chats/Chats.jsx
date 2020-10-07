@@ -54,7 +54,6 @@ const mapStateToProps = (state, ownProps) => {
     messages: getCurrentMessages(state, id),
   };
 };
-
 const mapDispatchToProps = {
   addMessage,
 };
