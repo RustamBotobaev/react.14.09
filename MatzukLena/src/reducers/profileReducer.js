@@ -1,10 +1,25 @@
-import { handleAction } from 'redux-actions';
+import { createSlice } from '@reduxjs/toolkit';
 
-const initReducer = {
-    name: 'Lena',
-    lastName: 'Matzuk',
+export const profileSlice = createSlice({
+  name: 'profile',
+  initialState: { firstName: 'Elena', lastName: 'Matzuk' },
+  reducers: {
+    getProfile() {},
+  },
+});
+
+export const { getProfile } = profileSlice;
+
+export const asyncGetProfile = () => async dispatch => {
+  try {
+    const { data, status } = await fetch('who_am_i');
+    if (status == 200) {
+      localStorage.setItem('profile', data);
+      dispatch(getProfile(data));
+    }
+  } catch (e) {
+    console.log('error interceprto');
+  }
 };
 
-const reducer = handleAction('', state => state, initReducer);
-
-export default reducer;
+export default profileSlice.reducer;

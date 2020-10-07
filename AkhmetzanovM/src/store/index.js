@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import chatReducer from '../reducers/chatReducer';
+import chatSliceReducer from '../reducers/chatReducer';
+import sessionSliceReducer from '../reducers/sessionReducer';
 
 export default configureStore({
   reducer: {
-    chats: chatReducer,
+    chats: chatSliceReducer,
+    session: sessionSliceReducer,
   },
 });

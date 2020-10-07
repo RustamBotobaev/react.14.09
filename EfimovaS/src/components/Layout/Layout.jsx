@@ -1,66 +1,43 @@
-import React, { Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { v4 as uuidv4} from 'uuid';
-import { withStyles } from '@material-ui/core';
+import { Container, withStyles } from '@material-ui/core';
 import Header from '../Header';
-import Message from '../Message';
-import FormMessage from '../FormMessage';
 import ChatList from '../ChatList';
 
-const styles = {
+const styles = theme => ({
     root: {
         display: 'flex',
         minHeight: '100vh',
       },
-};
-
-class HelloMessage extends Component {
-  state = {
-    messages: [
-      {
-        id: uuidv4(),
-        author: "Bot",
-        message: "Hello from Bot",
-      },
-    ],
-  }
-  
-  componentDidUpdate(prevProps, prevState) {
-    const { messages } = this.state;
-    if (messages.length % 2 === 0) {
-      setTimeout(() => {
-        this.addMessage({ author: "Bot", message: "Hello, I'm Bot" });
-      }, 500);
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        marginTop: theme.spacing(9),
     }
-  }
+});
 
-  addMessage = (message) => {
-    const { messages } = this.state;
-    this.setState({ messages: [...messages, { ...message, id: uuidv4() }] });
-  };
-
-    render() {
-        const { classes } = this.props;
-        const { messages } = this.state;
+const Layout = ({ children, classes}) => {
+   
+        /* const { classes } = this.props; */
+        
         return (
             <div className={classes.root}>
             <Header />
             <ChatList />
-            <ul className='list'> 
-                {messages.map(({ id, author, message }) => (
-                <Message key={id} author={author} message={message} />
-                ))}
-            </ul>
-            <FormMessage addMessage={this.addMessage} />
+            <Container maxWidth="md" classes={{ root: classes.container }}>
+            {children}
+            </Container>
             </div>
         );
-    };
-}
-
-HelloMessage.PropTypes = {
-    classes: PropTypes.shape({
-        root: PropTypes.string,
-    }).isRequired,
 };
 
-export default withStyles(styles)(HelloMessage);
+Layout.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]).isRequired,
+  classes: PropTypes.shape({
+      root: PropTypes.string,
+      container: PropTypes.string,
+  }).isRequired,
+};
+
+export default withStyles(styles)(Layout);

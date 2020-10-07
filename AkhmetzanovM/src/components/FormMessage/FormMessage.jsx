@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { IconButton, InputAdornment, OutlinedInput, withStyles } from '@material-ui/core';
 import { Send } from '@material-ui/icons';
 import { connect } from 'react-redux';
-import { addMessageToState } from '../../actions/chatAction';
+import { addMessageToState } from '../../reducers/chatReducer';
 
 const styles = (theme) => ({
   root: {
@@ -50,9 +50,9 @@ class FormMessage extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     const { messageText } = this.state;
-    const { addMessageToState } = this.props;
+    const { addMessageToState, currentChatId, userName } = this.props;
 
-    messageText && addMessageToState(messageText);
+    messageText && addMessageToState({ currentChatId: currentChatId, messageText: messageText, author: userName });
 
     this.setState({
       messageText: '',
@@ -91,6 +91,8 @@ class FormMessage extends Component {
 
 FormMessage.propTypes = {
   addMessageToState: PropTypes.func.isRequired,
+  currentChatId: PropTypes.string.isRequired,
+  userName: PropTypes.string.isRequired,
   classes: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 

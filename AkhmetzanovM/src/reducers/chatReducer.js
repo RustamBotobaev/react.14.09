@@ -1,50 +1,42 @@
 import { v4 } from 'uuid';
-import { ADD_CHAT, ADD_MESSAGE } from '../actions/chatAction';
-import produce from 'immer';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  chatList: {
-    1: { id: 1, title: 'Chat 1', messageIdList: [1] },
-    2: { id: 2, title: 'Chat 2', messageIdList: [2] },
+  chatsList: {
+    1: { id: 1, title: 'Chat 1', messagesIdList: [1, 2] },
+    2: { id: 2, title: 'Chat 2', messagesIdList: [1] },
   },
-  chatIds: [1, 2],
-  messageList: {
+  chatsIds: [1, 2],
+  messagesList: {
     1: { id: 1, author: 'BOT', messageText: 'Тут никого нет' },
     2: { id: 2, author: 'BOT', messageText: 'Тут тоже никого нет' },
   },
-  userName: 'Bob',
+  messagesIds: [1, 2],
 };
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    /**
-     * Добавляет новый пустой чат в список
-     */
-    case ADD_CHAT: {
+export const chatSliceReducer = createSlice({
+  name: 'chats',
+  initialState,
+  reducers: {
+    addChatToState(state) {
       const newId = v4();
-      return produce(state, (draft) => {
-        draft.chatList[newId] = { id: newId, title: `New chat1 `, messageIdList: [] };
-        draft.chatIds.push(newId);
-      });
-    }
-    /**
-     * Добавляет сообщение в общий список
-     * TODO отслеживать активный чат
-     */
-    case ADD_MESSAGE: {
+      state.chatsList[newId] = { id: newId, title: `New chat1 `, messagesIdList: [] };
+      state.chatsIds.push(newId);
+    },
+    addMessageToState(state, action) {
+      const { currentChatId, messageText, author } = action.payload;
       const newId = v4();
-      return produce(state, (draft) => {
-        draft.chatList[1].messageIdList.push(newId);
-        draft.messageList[newId] = {
-          id: newId,
-          author: state.userName,
-          messageText: action.payload,
-        };
-      });
-    }
-    default:
-      return state;
-  }
-};
+      state.chatsList[currentChatId].messagesIdList.push(newId);
+      state.messagesList[newId] = {
+        id: newId,
+        author: author,
+        messageText: messageText,
+      };
+      state.messagesIds.push(newId);
+    },
+  },
+});
 
-export default reducer;
+export const { addChatToState, addMessageToState } = chatSliceReducer.actions;
+
+export default chatSliceReducer.reducer;
