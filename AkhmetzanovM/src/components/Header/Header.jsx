@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 const Header = ({ currentChatId }) => {
   const classes = useStyles();
 
-  const chatList = useSelector((store) => store.chats.chatList);
+  const chatList = useSelector((store) => store.chats.chatsList);
   
   return (
     <AppBar position="absolute" className={cn(classes.appBar, classes.appBarShift)}>
