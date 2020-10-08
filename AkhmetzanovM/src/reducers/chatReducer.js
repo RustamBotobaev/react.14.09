@@ -13,6 +13,7 @@ const initialState = {
     2: { id: 2, author: BOT_NAME, messageText: 'Тут тоже никого нет' },
   },
   messagesIds: [1, 2],
+  newMessagesIds: [],
 };
 
 export const chatSliceReducer = createSlice({
@@ -25,19 +26,38 @@ export const chatSliceReducer = createSlice({
       state.chatsIds.push(newId);
     },
     addMessage(state, action) {
-      const { currentChatId, messageText, author } = action.payload;
-      const newId = v4();
-      state.chatsList[currentChatId].messagesIdList.push(newId);
-      state.messagesList[newId] = {
-        id: newId,
+      const { currentChatId, messageText, author, id } = action.payload;
+
+      state.chatsList[currentChatId].messagesIdList.push(id);
+      state.messagesList[id] = {
+        id: id,
         author: author,
         messageText: messageText,
       };
-      state.messagesIds.push(newId);
+      state.messagesIds.push(id);
+    },
+    addNewMessageId(state, { payload }) {
+      state.newMessagesIds.push(payload);
+    },
+    deleteNewMessageId(state, { payload }) {
+      state.newMessagesIds = state.newMessagesIds.filter((item) => item !== payload);
     },
   },
 });
 
-export const { addChatToState, addMessage } = chatSliceReducer.actions;
+export const { addChatToState, addMessage, addNewMessageId, deleteNewMessageId } = chatSliceReducer.actions;
+
+export const asyncAddMessage = (payload) => (dispatch) => {
+  const { author, currentChatId } = payload;
+  const newId = v4();
+
+  if (author != BOT_NAME) {
+    setTimeout(() => {
+      dispatch(addMessage({ currentChatId: currentChatId, messageText: 'Ответ бота', author: BOT_NAME, id: newId }));
+    }, 500);
+  }
+
+  dispatch(addMessage(payload));
+};
 
 export default chatSliceReducer.reducer;

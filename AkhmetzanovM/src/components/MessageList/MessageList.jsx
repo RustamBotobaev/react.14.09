@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 let listRef;
 
-const MessageList = ({ messages, userName }) => {
+const MessageList = ({ messages, userName, newMessagesIds }) => {
   const classes = useStyles();
   listRef = useRef();
 
@@ -32,7 +32,12 @@ const MessageList = ({ messages, userName }) => {
   return (
     <Container className={classes.list} ref={listRef}>
       {messages.map((message) => (
-        <Message key={message.id} message={message} userName={userName} />
+        <Message
+          key={message.id}
+          message={message}
+          userName={userName}
+          highlighted={newMessagesIds.includes(message.id)}
+        />
       ))}
     </Container>
   );
@@ -40,6 +45,7 @@ const MessageList = ({ messages, userName }) => {
 
 MessageList.propTypes = {
   userName: PropTypes.string.isRequired,
+  newMessagesIds: PropTypes.any.isRequired,
   messages: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.any,

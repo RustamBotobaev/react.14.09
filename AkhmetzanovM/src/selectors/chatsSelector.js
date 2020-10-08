@@ -11,6 +11,8 @@ export const getUserName = (state) => {
   return state.session.userName;
 };
 
+export const getNewMessagesIds = (state) => state.chats.newMessagesIds;
+
 export const getCurrentMessages = (state, id) => {
   const chatsList = state.chats.chatsList;
   const messagesList = state.chats.messagesList;

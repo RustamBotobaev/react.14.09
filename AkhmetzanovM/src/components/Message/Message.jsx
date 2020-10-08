@@ -5,6 +5,7 @@ import cn from 'classnames';
 
 const useStyles = makeStyles((theme) => ({
   message: {
+    position: 'relative',
     display: 'flex',
     padding: theme.spacing(1, 2),
     marginTop: theme.spacing(1),
@@ -22,9 +23,14 @@ const useStyles = makeStyles((theme) => ({
   otherusers: {
     backgroundColor: theme.palette.info.light,
   },
+  highlight: {
+    color: 'red',
+    position: 'absolute',
+    right: '-35px',
+  },
 }));
 
-const Message = ({ message, userName }) => {
+const Message = ({ message, userName, highlighted }) => {
   const classes = useStyles();
 
   return (
@@ -36,6 +42,7 @@ const Message = ({ message, userName }) => {
     >
       <span className={classes.author}>{message.author == userName ? 'Вы: ' : `${message.author}: `}</span>{' '}
       <span>{message.messageText}</span>
+      <span className={classes.highlight}>{highlighted == true && 'new'}</span>
     </Box>
   );
 };
@@ -43,6 +50,7 @@ const Message = ({ message, userName }) => {
 Message.propTypes = {
   message: PropTypes.object.isRequired,
   userName: PropTypes.string.isRequired,
+  highlighted: PropTypes.any.isRequired,
 };
 
 export default Message;
