@@ -15,19 +15,17 @@ const chatsSlice = createSlice({
     chatIds: [1],
   },
   reducers: {
-    addChat: (chats, { payload: { chatName } }) => {
-      const newId = uuid();
-
+    addChat: (chats, { payload: { chatName, chatId = uuid() } }) => {
       return {
         chats: {
           ...chats.chats,
-          [newId]: {
+          [chatId]: {
             chatName,
-            chatId: newId,
+            chatId,
             messages: [],
           },
         },
-        chatIds: [...chats.chatIds, newId],
+        chatIds: [...chats.chatIds, chatId],
       };
     },
     addMessageToChat: ({ chats }, { payload: { messageId, chatId } }) => {

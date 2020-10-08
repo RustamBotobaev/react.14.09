@@ -12,12 +12,12 @@ import getCurrentMessages from '../../features/messages/messagesSelectors';
 import { getChatById } from '../../features/chats/chatsSelectors';
 
 const Messages = () => {
-  const { id: chatId } = useParams();
-  const messages = useSelector(getCurrentMessages(chatId));
-  const isChatExist = useSelector(getChatById(chatId));
+  const { id } = useParams();
+  const messages = useSelector(getCurrentMessages(id));
+  const isChatExist = useSelector(getChatById(id));
   const dispatch = useDispatch();
 
-  const addMessage = ({ author, message }) => {
+  const addMessage = ({ author, message, chatId = id }) => {
     const newMessage = { id: uuid(), chatId, author, message };
 
     dispatch(addMessageToStore(newMessage));

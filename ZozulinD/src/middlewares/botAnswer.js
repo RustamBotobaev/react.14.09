@@ -2,10 +2,12 @@ import { v4 as uuid } from 'uuid';
 
 import { addMessage } from '../features/messages/messagesSlice';
 
-const botAnswerMiddleware = ({ dispatch }) => next => ({ type, payload }) => {
-  const res = next({ type, payload });
+const botAnswerMiddleware = ({ dispatch, getState }) => next => ({ type, payload }) => {
+  const res = setTimeout(() => next({ type, payload }), 0);
 
-  if (type === addMessage.toString() && payload.author !== 'Bot') {
+  const userName = getState().profile.name;
+
+  if (type === addMessage.toString() && payload.author === userName) {
     const botMessage = { id: uuid(), chatId: payload.chatId, author: 'Bot', message: 'Ok!' };
 
     setTimeout(() => dispatch(addMessage(botMessage)), 300);
