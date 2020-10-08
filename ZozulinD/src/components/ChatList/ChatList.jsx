@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
 
 import { Divider, Drawer, List, makeStyles } from '@material-ui/core';
 
 import ChatListItem from './ChatListItem';
+import Link from '../Router/Link';
+import { getChatsList } from '../../features/chats/chatsSelectors';
 
 const drawerWidth = 240;
 
@@ -23,7 +24,7 @@ const useStyles = makeStyles({
 
 const ChatList = () => {
   const classes = useStyles();
-  const chats = useSelector(state => state.messages.chats);
+  const chats = useSelector(getChatsList);
 
   return (
     <Drawer
@@ -35,7 +36,7 @@ const ChatList = () => {
         <Link to="/addChat" title="Create chat" />
         <Divider />
         {Object.values(chats).map(({ chatId, chatName }) => {
-          return <ChatListItem chatId={chatId} chatName={chatName} />;
+          return <ChatListItem chatId={chatId} chatName={chatName} key={chatId} />;
         })}
       </List>
     </Drawer>

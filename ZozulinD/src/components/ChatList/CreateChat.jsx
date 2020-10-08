@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { Button, makeStyles, TextField } from '@material-ui/core';
 
-import { addChat } from '../../features/messages/messagesSlice';
+import { addChat } from '../../features/chats/chatsSlice';
 
 const useStyles = makeStyles(theme => ({
   form: {
