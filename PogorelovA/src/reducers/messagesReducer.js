@@ -1,31 +1,18 @@
 /* eslint-disable no-param-reassign */
-import { createSlice } from '@reduxjs/toolkit';
-import { BOT_NAME } from '../utils/constants';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { fetchChats, addMessage } from './chatReducer';
+
+const messageAdapter = createEntityAdapter();
+
+export const messageSelector = messageAdapter.getSelectors(state => state.messages);
 
 export const messagesSlice = createSlice({
   name: 'messages',
-  initialState: {
-    byIds: {
-      1: {
-        id: 1,
-        author: BOT_NAME,
-        message: 'Привет от бота',
-      },
-      2: {
-        id: 2,
-        author: BOT_NAME,
-        message: 'Давай поболтаем',
-      },
-      3: {
-        id: 3,
-        author: BOT_NAME,
-        message: 'Давай поболтаем, я в третьем чате',
-      },
-    },
-    ids: [1, 2, 3],
+  initialState: messageAdapter.getInitialState({
+    entities: {},
+    ids: [],
     active: [],
-  },
+  }),
   reducers: {
     addNewMessageId(state, { payload }) {
       state.active.push(payload);
@@ -36,19 +23,10 @@ export const messagesSlice = createSlice({
   },
   extraReducers: {
     [fetchChats.fulfilled]: (state, { payload }) => {
-      payload.forEach(item => {
-        const { messageList } = item;
-        messageList.forEach(i => {
-          state.byIds[i.id] = i;
-          state.ids.push(i.id);
-        });
-      });
+      messageAdapter.upsertMany(state, payload.messageList);
     },
     [addMessage.fulfilled]: (state, { payload }) => {
-      const { author, message, id } = payload;
-
-      state.byIds[id] = { id, author, message };
-      state.ids.push(id);
+      messageAdapter.addOne(state, payload);
     },
   },
 });

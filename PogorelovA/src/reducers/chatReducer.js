@@ -2,12 +2,21 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 import faker from 'faker';
+import { normalize, schema } from 'normalizr';
 import callAPI from '../utils/fetcher';
 import { getCurrentMessages } from '../selectors/messageSelectors';
 
 export const fetchChats = createAsyncThunk('chats/fetchChats', async () => {
   const { data } = await callAPI('/chats');
-  return data;
+  const msgSchema = new schema.Entity('messageList');
+  const chatsSchema = new schema.Entity('chats', { messageList: [msgSchema] });
+  const result = normalize(
+    { chats: data },
+    {
+      chats: [chatsSchema],
+    },
+  );
+  return result.entities;
 });
 
 export const postChat = createAsyncThunk('chats/postChats', async () => {
@@ -46,23 +55,14 @@ export const chatsSlice = createSlice({
     ids: [],
     isFetching: false,
   }),
-  reducers: {
-    addChatToState: state => {
-      const newId = uuidv4();
-      state.entities[newId] = { id: newId, title: `Чат ${newId}`, messageList: [] };
-      state.ids.push(newId);
-    },
-  },
+  reducers: {},
   extraReducers: {
     [fetchChats.pending]: state => {
       state.isFetching = true;
     },
     [fetchChats.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
-      chatsAdapter.upsertMany(
-        state,
-        payload.map(i => ({ ...i, messageList: i.messageList.map(msg => msg.id) })),
-      );
+      chatsAdapter.upsertMany(state, payload.chats);
     },
     [postChat.pending]: state => {
       state.isFetching = true;
