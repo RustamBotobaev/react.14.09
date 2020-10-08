@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Box, withStyles } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 
 const styles = {
@@ -23,8 +23,9 @@ class FormMessage extends Component {
   };
 
   /**
-   * При нажатии на кнопку 'Send' как я понял данные которые я ввел записываются в state компонента FormMessage
-    и передаются в addMessage в виде параметра в методе onSubmit (addMessage(this.state))
+   * При нажатии на кнопку 'Send', данные которые я ввел записываются в state компонента FormMessage
+    и передаются в виде аргументов в callback addMessage, который прилетел сюда из porps
+    в компоненте Chats
 
    * @param {*} e клик на кнопку 'Send'
    */
@@ -59,7 +60,7 @@ class FormMessage extends Component {
           autoComplete="off"
           fullWidth
         />
-        <button type="submit" className={classes.sendBtn} onClick={this.clearField}>
+        <button type="submit" className={classes.sendBtn}>
           Send
         </button>
       </form>

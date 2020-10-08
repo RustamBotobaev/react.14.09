@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 
+
 const useStyles = makeStyles(theme => ({
     list: {
         display: 'flex',
@@ -20,26 +21,22 @@ const useStyles = makeStyles(theme => ({
 }));
     let listRef;
 
-const MessageList = ({ messages}) => {
+const MessageList = ({ messages, activeMessages}) => {
     const classes = useStyles();
     listRef = useRef();
-    // const { id } = useParams();
-    // const chats = useSelector(state => state.chats.byIds);
-    // const messagesFromRedux = useSelector(state => state.messages.byIds);
-    //
-    // const messageList = (chats[id]?.messageList ?? []).map(idx => messagesFromRedux[idx]);
 
-    useEffect(() => {
-        const { current } = listRef;
-        if (current) {
-          current.scrollTo(0, 0);
-        }
-      }, [messages]);
+    // useEffect(() => {
+    //     const { current } = listRef;
+    //     if (current) {
+    //       current.scrollTo(messages.length * 36, 0);
+    //     }
+    //   }, [messages]);
+
     return (
         <Box ref={listRef} component="ul" className={classes.list}>
       {messages.length ? (
         messages.map(({ id, author, message }) => (
-          <Message key={id} author={author} message={message} />
+          <Message key={id} author={author} message={message} isActive={activeMessages.includes(id)}/>
         ))
       ) : (
         <Typography>Здесь ещё нет сообщений</Typography>
@@ -55,6 +52,8 @@ MessageList.propTypes = {
          author: PropTypes.string,
          message: PropTypes.string,
     })).isRequired ,
+    activeMessages: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
+    .isRequired,
 }
 
 export default MessageList;

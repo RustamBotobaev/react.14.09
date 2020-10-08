@@ -16,10 +16,9 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import cn from 'classnames';
 import { NavLink, Link } from 'react-router-dom';
-import mockChats from './mockChats';
 import { useDispatch, useSelector } from 'react-redux';
-import { addChatToState } from '../../actions/chatActions';
 import { getChatsList } from '../../selectors/chatsSelectors';
+import { addChatToState } from '../../reducers/chatReducer';
 
 const useStyles = makeStyles(theme => ({
     drawerPaper: {

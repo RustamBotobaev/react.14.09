@@ -26,14 +26,6 @@ const MessageList = ({ messages, activeMessages }) => {
   const classes = useStyles();
   listRef = useRef();
 
-  // useEffect(() => {
-  //   const { current } = listRef;
-
-  //   if (current) {
-  //     current.scrollTo(messages.length * 36, 0);
-  //   }
-  // }, [messages]);
-
   return (
     <Box ref={listRef} component="ul" className={classes.list}>
       {messages.length ? (
