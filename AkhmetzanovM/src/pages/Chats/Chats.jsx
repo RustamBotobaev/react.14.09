@@ -7,30 +7,23 @@ import FormMessage from '../../components/FormMessage';
 import Header from '../../components/Header';
 import Layout from '../../components/Layout';
 import ChatsList from '../../components/ChatsList';
-import { getCurrentMessages } from '../../selectors/chatsSelector';
+import { getCurrentMessages, getUserName, getNewMessagesIds } from '../../selectors/chatsSelector';
 import { addChatToState } from '../../reducers/chatReducer';
 
 class Chats extends Component {
-  state = {
-    userName: 'Bob',
-  };
-
-  /**
-   * Проверяет, чьё сообщение было последним и если это не бот, то запускает родительский метод автоответа
-   */
   componentDidUpdate() {}
 
   render() {
-    const { chatsList, messages, userName } = this.props;
+    const { newMessagesIds, chatsList, messages, userName } = this.props;
     const { id } = this.props.match.params;
 
     return (
       <Layout>
         <ChatsList />
-        {id in chatsList ? (
+        {chatsList ? (
           <>
             <Header currentChatId={id} />
-            <MessageList messages={messages} userName={userName} />
+            <MessageList messages={messages} userName={userName} newMessagesIds={newMessagesIds} />
             <FormMessage currentChatId={id} userName={userName} />
           </>
         ) : (
@@ -46,6 +39,7 @@ class Chats extends Component {
 Chats.propTypes = {
   match: PropTypes.objectOf(PropTypes.any).isRequired,
   chatsList: PropTypes.any.isRequired,
+  newMessagesIds: PropTypes.any.isRequired,
   userName: PropTypes.string.isRequired,
   addChatToState: PropTypes.func.isRequired,
   messages: PropTypes.arrayOf(
@@ -61,7 +55,8 @@ const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.match.params;
   return {
     messages: getCurrentMessages(state, id),
-    userName: state.session.userName,
+    newMessagesIds: getNewMessagesIds(state),
+    userName: getUserName(state),
     chatsList: state.chats.chatsList,
   };
 };
