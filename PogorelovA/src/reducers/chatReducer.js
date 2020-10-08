@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 import faker from 'faker';
 import callAPI from '../utils/fetcher';
-import { getCurrentMessages } from '../selectors/chatsSelectors';
+import { getCurrentMessages } from '../selectors/messageSelectors';
 
 export const fetchChats = createAsyncThunk('chats/fetchChats', async () => {
   const { data } = await callAPI('/chats');
@@ -35,17 +35,21 @@ export const addMessage = createAsyncThunk(
   },
 );
 
+const chatsAdapter = createEntityAdapter();
+
+export const chatsSelector = chatsAdapter.getSelectors(state => state.chats);
+
 export const chatsSlice = createSlice({
   name: 'chats',
-  initialState: {
-    byIds: {},
+  initialState: chatsAdapter.getInitialState({
+    entities: {},
     ids: [],
     isFetching: false,
-  },
+  }),
   reducers: {
     addChatToState: state => {
       const newId = uuidv4();
-      state.byIds[newId] = { id: newId, title: `Чат ${newId}`, messageList: [] };
+      state.entities[newId] = { id: newId, title: `Чат ${newId}`, messageList: [] };
       state.ids.push(newId);
     },
   },
@@ -55,18 +59,17 @@ export const chatsSlice = createSlice({
     },
     [fetchChats.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
-      payload.forEach(item => {
-        state.byIds[item.id] = { ...item, messageList: item.messageList.map(({ id }) => id) };
-        state.ids = Array.from(new Set([...state.ids, item.id]));
-      });
+      chatsAdapter.upsertMany(
+        state,
+        payload.map(i => ({ ...i, messageList: i.messageList.map(msg => msg.id) })),
+      );
     },
     [postChat.pending]: state => {
       state.isFetching = true;
     },
     [postChat.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
-      state.byIds[payload.id] = payload;
-      state.ids.push(payload.id);
+      chatsAdapter.addOne(state, payload);
     },
     [addMessage.pending]: state => {
       state.isFetching = true;
@@ -74,14 +77,14 @@ export const chatsSlice = createSlice({
     [addMessage.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
       const { id, chatId } = payload;
-      state.byIds[chatId].messageList.push(id);
+      state.entities[chatId].messageList.push(id);
     },
     [deleteChat.pending]: state => {
       state.isFetching = true;
     },
     [deleteChat.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
-      state.ids = state.ids.filter(i => i !== payload);
+      chatsAdapter.removeOne(state, payload);
     },
   },
 });

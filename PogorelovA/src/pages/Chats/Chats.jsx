@@ -7,13 +7,10 @@ import { connect } from 'react-redux';
 import MessageList from '../../components/MessageList';
 import FormMessage from '../../components/FormMessage';
 import Layout from '../../components/Layout/Layout';
-import {
-  getActiveMessages,
-  getCurrentMessages,
-  getIsFetching,
-} from '../../selectors/chatsSelectors';
+import { getActiveMessages, getIsFetching } from '../../selectors/chatsSelectors';
 import Preloader from '../../components/Preloader/Preloader';
 import { fetchChats, addMessage } from '../../reducers/chatReducer';
+import { getCurrentMessages } from '../../selectors/messageSelectors';
 
 class Chats extends Component {
   componentDidMount() {
