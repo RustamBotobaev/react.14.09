@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import faker from 'faker';
 import { normalize, schema } from 'normalizr';
 import callAPI from '../utils/fetcher';
 import { getCurrentMessages } from '../selectors/chatsSelectors';
@@ -25,7 +24,7 @@ export const fetchChats = createAsyncThunk('chats/fetchChats', async () => {
 
 export const postChat = createAsyncThunk('chats/postChats', async () => {
   const newId = uuidv4();
-  const newChat = { id: newId, title: faker.name.title(), messageList: [] };
+  const newChat = { id: newId, title: `Chat ${newId}`, messageList: [] };
   const { data } = await callAPI.post('/chats', { ...newChat });
   return data;
 });
