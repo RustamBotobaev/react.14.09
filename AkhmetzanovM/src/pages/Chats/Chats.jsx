@@ -7,17 +7,10 @@ import FormMessage from '../../components/FormMessage';
 import Header from '../../components/Header';
 import Layout from '../../components/Layout';
 import ChatsList from '../../components/ChatsList';
-import { getCurrentMessages } from '../../selectors/chatsSelector';
+import { getCurrentMessages, getUserName } from '../../selectors/chatsSelector';
 import { addChatToState } from '../../reducers/chatReducer';
 
 class Chats extends Component {
-  state = {
-    userName: 'Bob',
-  };
-
-  /**
-   * Проверяет, чьё сообщение было последним и если это не бот, то запускает родительский метод автоответа
-   */
   componentDidUpdate() {}
 
   render() {
@@ -27,7 +20,7 @@ class Chats extends Component {
     return (
       <Layout>
         <ChatsList />
-        {id in chatsList ? (
+        {chatsList ? (
           <>
             <Header currentChatId={id} />
             <MessageList messages={messages} userName={userName} />
@@ -61,7 +54,7 @@ const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.match.params;
   return {
     messages: getCurrentMessages(state, id),
-    userName: state.session.userName,
+    userName: getUserName(state),
     chatsList: state.chats.chatsList,
   };
 };

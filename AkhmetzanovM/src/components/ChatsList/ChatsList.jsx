@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 const ChatsList = () => {
   const classes = useStyles();
 
-  const chatsList = useSelector(getChatsList);
+  const chats = useSelector(getChatsList);
   const dispatch = useDispatch();
 
   const addChat = () => {
@@ -74,7 +74,7 @@ const ChatsList = () => {
         <OutlinedInput type="search" className={classes.search} placeholder="Найти чат" />
       </div>
       <List className={classes.list}>
-        {chatsList.map(({ id, title }) => (
+        {chats.map(({ id, title }) => (
           <ListItem button key={id} component={NavLink} to={`/chat/${id}`} activeClassName="Mui-selected">
             <ListItemAvatar>
               <Avatar>{title[0]}</Avatar>

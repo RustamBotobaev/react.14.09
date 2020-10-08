@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Message from '../Message';
 import PropTypes from 'prop-types';
 import { Container, makeStyles } from '@material-ui/core';
@@ -15,11 +15,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+let listRef;
+
 const MessageList = ({ messages, userName }) => {
   const classes = useStyles();
+  listRef = useRef();
+
+  useEffect(() => {
+    const { current } = listRef;
+
+    if (current) {
+      current.scrollTo(0, current.scrollHeight);
+    }
+  }, [messages]);
 
   return (
-    <Container className={classes.list}>
+    <Container className={classes.list} ref={listRef}>
       {messages.map((message) => (
         <Message key={message.id} message={message} userName={userName} />
       ))}

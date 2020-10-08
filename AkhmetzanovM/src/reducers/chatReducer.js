@@ -1,5 +1,6 @@
 import { v4 } from 'uuid';
 import { createSlice } from '@reduxjs/toolkit';
+import { BOT_NAME } from '../utils/constats';
 
 const initialState = {
   chatsList: {
@@ -8,8 +9,8 @@ const initialState = {
   },
   chatsIds: [1, 2],
   messagesList: {
-    1: { id: 1, author: 'BOT', messageText: 'Тут никого нет' },
-    2: { id: 2, author: 'BOT', messageText: 'Тут тоже никого нет' },
+    1: { id: 1, author: BOT_NAME, messageText: 'Тут никого нет' },
+    2: { id: 2, author: BOT_NAME, messageText: 'Тут тоже никого нет' },
   },
   messagesIds: [1, 2],
 };
@@ -23,7 +24,7 @@ export const chatSliceReducer = createSlice({
       state.chatsList[newId] = { id: newId, title: `New chat1 `, messagesIdList: [] };
       state.chatsIds.push(newId);
     },
-    addMessageToState(state, action) {
+    addMessage(state, action) {
       const { currentChatId, messageText, author } = action.payload;
       const newId = v4();
       state.chatsList[currentChatId].messagesIdList.push(newId);
@@ -37,6 +38,6 @@ export const chatSliceReducer = createSlice({
   },
 });
 
-export const { addChatToState, addMessageToState } = chatSliceReducer.actions;
+export const { addChatToState, addMessage } = chatSliceReducer.actions;
 
 export default chatSliceReducer.reducer;

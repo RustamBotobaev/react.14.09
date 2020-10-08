@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { IconButton, InputAdornment, OutlinedInput, withStyles } from '@material-ui/core';
 import { Send } from '@material-ui/icons';
 import { connect } from 'react-redux';
-import { addMessageToState } from '../../reducers/chatReducer';
+import { addMessage } from '../../reducers/chatReducer';
 
 const styles = (theme) => ({
   root: {
@@ -50,9 +50,9 @@ class FormMessage extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     const { messageText } = this.state;
-    const { addMessageToState, currentChatId, userName } = this.props;
+    const { addMessage, currentChatId, userName } = this.props;
 
-    messageText && addMessageToState({ currentChatId: currentChatId, messageText: messageText, author: userName });
+    messageText && addMessage({ currentChatId: currentChatId, messageText: messageText, author: userName });
 
     this.setState({
       messageText: '',
@@ -90,19 +90,16 @@ class FormMessage extends Component {
 }
 
 FormMessage.propTypes = {
-  addMessageToState: PropTypes.func.isRequired,
+  addMessage: PropTypes.func.isRequired,
   currentChatId: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
   classes: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  chatList: state.chats.chatList,
-  messageList: state.chats.messageList,
-});
+const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = {
-  addMessageToState,
+  addMessage,
 };
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(FormMessage));
