@@ -7,14 +7,13 @@ import { connect } from 'react-redux';
 import MessageList from '../../components/MessageList';
 import FormMessage from '../../components/FormMessage';
 import Layout from '../../components/Layout/Layout';
-import { asyncAddMessage } from '../../reducers/messagesReducer';
 import {
   getActiveMessages,
   getCurrentMessages,
   getIsFetching,
 } from '../../selectors/chatsSelectors';
 import Preloader from '../../components/Preloader/Preloader';
-import { fetchChats } from '../../reducers/chatReducer';
+import { fetchChats, addMessage } from '../../reducers/chatReducer';
 
 class Chats extends Component {
   componentDidMount() {
@@ -24,17 +23,16 @@ class Chats extends Component {
 
   submitMessage = ({ author, message }) => {
     const {
-      asyncAddMessage,
+      addMessage,
       match: {
         params: { id },
       },
     } = this.props;
-    asyncAddMessage({ author, message, chatId: id, id: uuidv4() });
+    addMessage({ author, message, chatId: id, id: uuidv4() });
   };
 
   render() {
     const { messages, activeMessages, isFetching } = this.props;
-
     return (
       <Layout>
         <Preloader open={isFetching} />
@@ -52,7 +50,7 @@ Chats.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.any).isRequired,
   activeMessages: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
     .isRequired,
-  asyncAddMessage: PropTypes.func.isRequired,
+  addMessage: PropTypes.func.isRequired,
   isFetching: PropTypes.bool.isRequired,
   fetchChats: PropTypes.func.isRequired,
 };
@@ -71,7 +69,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = {
-  asyncAddMessage,
+  addMessage,
   fetchChats,
 };
 
