@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, makeStyles } from '@material-ui/core';
-import Message from '../Message/Message';
+import Message from '../Message';
 
 const useStyles = makeStyles(theme => ({
   chat: {
