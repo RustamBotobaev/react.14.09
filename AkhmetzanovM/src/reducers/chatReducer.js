@@ -36,6 +36,13 @@ export const chatSliceReducer = createSlice({
       };
       state.messagesIds.push(id);
     },
+    deleteMessage(state, action) {
+      const { currentChatId, id } = action.payload;
+      const index = state.chatsList[currentChatId].messagesIdList.indexOf(id);
+      if (index > -1) {
+        state.chatsList[currentChatId].messagesIdList.splice(index, 1);
+      }
+    },
     addNewMessageId(state, { payload }) {
       state.newMessagesIds.push(payload);
     },

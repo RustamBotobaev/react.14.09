@@ -33,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
 const Message = ({ message, userName, highlighted }) => {
   const classes = useStyles();
 
+  // const deleteMessage = (event) => {
+  //   console.log(event);
+  // };
+
   return (
     <Box
       className={cn(classes.message, {
@@ -42,6 +46,9 @@ const Message = ({ message, userName, highlighted }) => {
     >
       <span className={classes.author}>{message.author == userName ? 'Вы: ' : `${message.author}: `}</span>{' '}
       <span>{message.messageText}</span>
+      {/* <IconButton size="small" onClick={deleteMessage}>
+        <Close />
+      </IconButton> */}
       <span className={classes.highlight}>{highlighted == true && 'new'}</span>
     </Box>
   );
