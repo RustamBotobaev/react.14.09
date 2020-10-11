@@ -19,7 +19,7 @@ export const profileSlice = createSlice({
 
 export const { getProfile, startFetch, endFetch } = profileSlice.actions;
 
-export const asyncGetProfile = () => async dispatch => {
+export const asyncGetProfile = () => async (dispatch, getState) => {
   try {
     dispatch(startFetch());
 

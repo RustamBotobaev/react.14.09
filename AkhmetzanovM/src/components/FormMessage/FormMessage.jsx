@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, InputAdornment, OutlinedInput, withStyles } from '@material-ui/core';
 import { Send } from '@material-ui/icons';
 import { connect } from 'react-redux';
-import { addMessageToState } from '../../reducers/chatReducer';
+import { v4 } from 'uuid';
+import { asyncAddMessage } from '../../reducers/chatReducer';
 
 const styles = (theme) => ({
   root: {
@@ -19,14 +20,11 @@ const styles = (theme) => ({
 });
 
 class FormMessage extends Component {
-  constructor() {
-    super();
-    this.textInput = React.createRef();
-  }
-
   state = {
     messageText: '',
   };
+
+  inputRef = createRef();
 
   /**
    * Сохраняет в state значение введённое в текстовое поле
@@ -40,7 +38,11 @@ class FormMessage extends Component {
    * Ставит фокус на поле для ввода сообщения. Нужно чтобы постоянно не приходилось кликать на текстовое поле.
    */
   inputFocus() {
-    this.textInput.current.focus();
+    // this.textInput.current.focus();
+    const { current } = this.inputRef;
+    if (current) {
+      current.focus();
+    }
   }
 
   /**
@@ -50,15 +52,19 @@ class FormMessage extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     const { messageText } = this.state;
-    const { addMessageToState, currentChatId, userName } = this.props;
-
-    messageText && addMessageToState({ currentChatId: currentChatId, messageText: messageText, author: userName });
+    const { asyncAddMessage, currentChatId, userName } = this.props;
+    const newId = v4();
+    messageText &&
+      asyncAddMessage({ currentChatId: currentChatId, messageText: messageText, author: userName, id: newId });
 
     this.setState({
       messageText: '',
     });
-    this.inputFocus();
   };
+
+  componentDidUpdate() {
+    this.inputFocus();
+  }
 
   render() {
     const { classes } = this.props;
@@ -75,7 +81,10 @@ class FormMessage extends Component {
           autoFocus
           autoComplete="off"
           type="text"
-          ref={this.textInput}
+          inputProps={{
+            ref: this.inputRef,
+          }}
+          // ref={this.textInput}
           endAdornment={
             <InputAdornment position="end">
               <IconButton edge="end" onClick={this.onSubmit}>
@@ -90,19 +99,16 @@ class FormMessage extends Component {
 }
 
 FormMessage.propTypes = {
-  addMessageToState: PropTypes.func.isRequired,
+  asyncAddMessage: PropTypes.func.isRequired,
   currentChatId: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
   classes: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  chatList: state.chats.chatList,
-  messageList: state.chats.messageList,
-});
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = {
-  addMessageToState,
+  asyncAddMessage,
 };
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(FormMessage));

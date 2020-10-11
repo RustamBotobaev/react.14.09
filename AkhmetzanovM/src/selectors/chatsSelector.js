@@ -1,11 +1,17 @@
-import { createSelector } from '@reduxjs/toolkit';
+export const getChatsList = (state) => {
+  const chatsList = state.chats.chatsList;
+  const chatsIds = state.chats.chatsIds;
+  if (chatsList) {
+    return chatsIds.map((id) => chatsList[id]);
+  }
+  return [];
+};
 
-const getChatsById = (state) => state.chats.chatsList;
-const getChatsIDs = (state) => state.chats.chatsIds;
+export const getUserName = (state) => {
+  return state.session.userName;
+};
 
-export const getChatsList = createSelector(getChatsById, getChatsIDs, (chatsList, chatsIds) =>
-  chatsIds.map((id) => chatsList[id]),
-);
+export const getNewMessagesIds = (state) => state.chats.newMessagesIds;
 
 export const getCurrentMessages = (state, id) => {
   const chatsList = state.chats.chatsList;

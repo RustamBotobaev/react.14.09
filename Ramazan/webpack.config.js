@@ -11,7 +11,7 @@ module.exports = {
     filename: '[name].js',
     publicPath: '/',
   },
-  devtool: 'cheap-inline-module-source-map',
+  devtool: 'source-map',
 
   resolve: {
     modules: [`${__dirname}/static_src`, 'node_modules'],
@@ -53,9 +53,7 @@ module.exports = {
     compress: true,
     port: 9000,
     hot: true,
-    historyApiFallback: {
-      index: 'index.html',
-    },
+    historyApiFallback: true,
   },
   plugins: [new HtmlWebpackPlugin({ template: './src/index.html' }), new MiniCssExtractPlugin()],
 };
