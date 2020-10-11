@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Button,
   Divider,
   Drawer,
   IconButton,
@@ -15,8 +16,8 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import cn from 'classnames';
 import { NavLink, Link } from 'react-router-dom';
-
-import mockChats from './mockChats';
+import { useDispatch, useSelector } from 'react-redux';
+// import { addChatToState } from '../../actions/chatActions';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
@@ -47,10 +48,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-// с помощью map мы перебираем массив в файле mockChats и вытаскиваем каждный элемент
-// и задаем ему свой id
 const ChatList = () => {
   const classes = useStyles();
+
+  const chats = useSelector(store => store.chatsStore.byIds);
+  const dispatch = useDispatch();
+
+  const addChat = () => {
+    dispatch(addChat());
+  };
 
   return (
     <Drawer
@@ -67,7 +73,7 @@ const ChatList = () => {
       </div>
       <Divider />
       <List>
-        {mockChats.map(({ id, name }) => (
+        {Object.values(chats).map(({ id, title }) => (
           <NavLink key={id} to={`/chats/${id}/`} activeClassName={classes.active}>
             <ListItem button>
               <ListItemIcon>
@@ -78,6 +84,8 @@ const ChatList = () => {
           </NavLink>
         ))}
       </List>
+      <Button onClick={addChat}>add chats</Button>
+
       <Divider className={classes.secondList} />
       <List>
         <ListSubheader inset>Saved reports</ListSubheader>

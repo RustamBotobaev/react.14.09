@@ -17,19 +17,16 @@ const styles = theme => ({
     }
 });
 
-const Layout = ({ children, classes}) => {
-   
-        /* const { classes } = this.props; */
-        
-        return (
-            <div className={classes.root}>
-            <Header />
-            <ChatList />
-            <Container maxWidth="md" classes={{ root: classes.container }}>
-            {children}
-            </Container>
-            </div>
-        );
+const Layout = ({ children, classes }) => {       
+  return (
+    <div className={classes.root}>
+      <Header />
+      <ChatList />
+      <Container maxWidth="md" classes={{ root: classes.container }}>
+        {children}
+      </Container>
+    </div>
+  );
 };
 
 Layout.propTypes = {

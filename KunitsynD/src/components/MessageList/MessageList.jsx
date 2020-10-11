@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Box, makeStyles } from '@material-ui/core';
+import { Box, makeStyles, Typography } from '@material-ui/core';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Message from '../Message';
@@ -11,6 +11,8 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     listStyle: 'none',
     marggin: 0,
+    maxHeight: 500,
+    overflow: 'auto',
     border: '1px solid #333',
     width: '100%',
     padding: theme.spacing(4),
@@ -18,19 +20,34 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const MessageList = ({ messages }) => {
-  const classes = useStyles();
-  // const { id } = useParams();
-  // const chats = useSelector(state => state.chats.byIds);
-  // const messagesFromRedux = useSelector(state => state.messages.byIds);
+let listRef;
 
-  // const messages = (chats[id]?.messageList ?? []).map(idx => messagesFromRedux[idx]);
+const MessageList = ({ messages, activeMessages }) => {
+  const classes = useStyles();
+  listRef = useRef();
+
+  // useEffect(() => {
+  //   const { current } = listRef;
+
+  //   if (current) {
+  //     current.scrollTo(messages.length * 36, 0);
+  //   }
+  // }, [messages]);
 
   return (
-    <Box component="ul" className={classes.list}>
-      {messages.map(({ id, author, message }) => (
-        <Message key={id} author={author} message={message} />
-      ))}
+    <Box ref={listRef} component="ul" className={classes.list}>
+      {messages.length ? (
+        messages.map(({ id, author, message }) => (
+          <Message
+            key={id}
+            author={author}
+            message={message}
+            isActive={activeMessages.includes(id)}
+          />
+        ))
+      ) : (
+        <Typography>Здесь ещё нет сообщений</Typography>
+      )}
     </Box>
   );
 };
@@ -43,6 +60,8 @@ MessageList.propTypes = {
       message: PropTypes.string,
     }),
   ).isRequired,
+  activeMessages: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
+    .isRequired,
 };
 
 export default MessageList;

@@ -18,8 +18,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import cn from 'classnames';
 import { NavLink, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getChatsList } from '../../selectors/chatsSelectors';
-import { deleteChat, postChat } from '../../reducers/chatReducer';
+import { chatsSelector, deleteChat, postChat } from '../../reducers/chatReducer';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
@@ -49,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 const ChatList = () => {
   const classes = useStyles();
 
-  const chats = useSelector(getChatsList);
+  const chats = useSelector(chatsSelector.selectAll);
   const dispatch = useDispatch();
 
   const addChat = () => {

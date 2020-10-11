@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
       },
 }));
 
-const Header = () => {
+const Header = ({chats}) => {
     const classes = useStyles();
     return (
         <AppBar position="absolute" className={cn(classes.appBar, classes.appBarShift)}>

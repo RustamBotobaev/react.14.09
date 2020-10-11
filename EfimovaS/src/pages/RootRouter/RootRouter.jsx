@@ -12,7 +12,9 @@ const RootRouter = () => {
             <Route exact path="/">
                 <Home />
             </Route>
-            <Route path="/about" component={About} />
+            <Route path="/about">
+                <About />
+            </Route>
             <Route path="/chats/:id" component={Chats} />
             <Route
                 render={() => (

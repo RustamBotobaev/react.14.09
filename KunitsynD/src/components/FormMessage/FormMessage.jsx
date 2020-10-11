@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { TextField, withStyles } from '@material-ui/core';
 
@@ -16,6 +16,15 @@ class FormMessage extends Component {
     author: '',
     message: '',
   };
+
+  inputRef = createRef();
+
+  componentDidMount() {
+    const { current } = this.inputRef;
+    if (current) {
+      current.focus();
+    }
+  }
 
   onSubmit = e => {
     e.preventDefault();
@@ -49,6 +58,9 @@ class FormMessage extends Component {
           onChange={this.onChange}
           value={message}
           autoComplete="off"
+          inputProps={{
+            ref: this.inputRef,
+          }}
         />
         <button type="submit">Add</button>
       </form>
