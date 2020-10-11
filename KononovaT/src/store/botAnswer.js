@@ -1,5 +1,7 @@
 import {
-    addMessage,
+    addMessage
+} from '../reducers/chatReducer';
+import {
     addNewMessageId,
     deleteNewMessageId
 } from '../reducers/messagesReducer';
@@ -11,7 +13,7 @@ const botAnswer = ({
         type,
         payload
     } = action;
-    if (type === addMessage.toString()) {
+    if (type === addMessage.fulfilled) {
         const {
             id
         } = payload;

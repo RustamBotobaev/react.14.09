@@ -1,23 +1,45 @@
 import {
     createSlice,
-    createAsyncThunk
+    createAsyncThunk,
+    createEntityAdapter
 } from '@reduxjs/toolkit';
 import {
     v4 as uuidv4
 } from 'uuid';
-import faker from 'faker';
+import {
+    normalize,
+    schema
+} from 'normalizr';
 import callAPI from '../utils/fetcher';
+import {
+    getCurrentMessages
+} from '../selectors/chatsSelectors';
+
+const chatsAdapter = createEntityAdapter();
+
+export const chatsSelector = chatsAdapter.getSelectors(state => state.chats);
 
 export const fetchChats = createAsyncThunk('chats/fetchChats', async () => {
-    const {data} = await callAPI('/chats');
-    return data;
+    const {
+        data
+    } = await callAPI('/chats');
+    const msgSchema = new schema.Entity('messageList');
+    const chatsSchema = new schema.Entity('chats', {
+        messageList: [msgSchema]
+    });
+    const result = normalize({
+        chats: data
+    }, {
+        chats: [chatsSchema],
+    }, );
+    return result.entities;
 });
 
 export const postChat = createAsyncThunk('chats/postChats', async () => {
     const newId = uuidv4();
     const newChat = {
         id: newId,
-        title: faker.name.title(),
+        title: `Chat ${newId}`,
         messageList: []
     };
     const {
@@ -33,49 +55,44 @@ export const deleteChat = createAsyncThunk('chats/deleteChat', async id => {
     return id;
 });
 
+export const addMessage = createAsyncThunk(
+    'chats/patchChat',
+    async (messageData, {
+        getState
+    }) => {
+        const {
+            chatId,
+            author,
+            message,
+            id
+        } = messageData;
+        const messages = getCurrentMessages(getState(), chatId);
+        await callAPI.patch(`/chats/${chatId}`, {
+            messageList: [...messages, {
+                author,
+                message,
+                id
+            }],
+        });
+        return messageData;
+    },
+);
+
 export const chatsSlice = createSlice({
     name: 'chats',
-    initialState: {
-        byIds: {},
-        ids: [],
+    initialState: chatsAdapter.getInitialState({
         isFetching: false,
-    },
-    reducers: {
-        addChatToState: (state, {
-            payload
-        }) => {
-            const newId = uuidv4();
-            state.byIds[newId] = {
-                id: newId,
-                title: `Чат ${newId}`,
-                messageList: []
-            };
-            state.ids.push(newId);
-        },
-        // [addMessage]: (state, { payload }) => {
-        //   const { id, chatId } = payload;
-        //   state.byIds[chatId].messageList.push(id);
-        // },
-    },
+    }),
+    reducers: {},
     extraReducers: {
-        [fetchChats.pending]: (state, {
-            payload
-        }) => {
+        [fetchChats.pending]: state => {
             state.isFetching = true;
         },
         [fetchChats.fulfilled]: (state, {
             payload
         }) => {
             state.isFetching = false;
-            payload.forEach(item => {
-                state.byIds[item.id] = {
-                    ...item,
-                    messageList: item.messageList.map(({
-                        id
-                    }) => id)
-                };
-                state.ids.push(item.id);
-            });
+            chatsAdapter.upsertMany(state, payload.chats);
         },
         [postChat.pending]: state => {
             state.isFetching = true;
@@ -84,8 +101,20 @@ export const chatsSlice = createSlice({
             payload
         }) => {
             state.isFetching = false;
-            state.byIds[payload.id] = payload;
-            state.ids.push(payload.id);
+            chatsAdapter.addOne(state, payload);
+        },
+        [addMessage.pending]: state => {
+            state.isFetching = true;
+        },
+        [addMessage.fulfilled]: (state, {
+            payload
+        }) => {
+            const {
+                id,
+                chatId
+            } = payload;
+            state.isFetching = false;
+            state.entities[chatId].messageList.push(id);
         },
         [deleteChat.pending]: state => {
             state.isFetching = true;
@@ -94,7 +123,7 @@ export const chatsSlice = createSlice({
             payload
         }) => {
             state.isFetching = false;
-            state.ids = state.ids.filter(i => i !== payload);
+            chatsAdapter.removeOne(state, payload);
         },
     },
 });

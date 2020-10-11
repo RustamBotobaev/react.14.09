@@ -1,4 +1,6 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {
+    createSlice
+} from '@reduxjs/toolkit';
 import callAPI from '../utils/fetcher';
 
 export const profileSlice = createSlice({
@@ -30,7 +32,7 @@ export const {
     endFetch
 } = profileSlice.actions;
 
-export const asyncGetProfile = () => async dispatch => {
+export const asyncGetProfile = () => async (dispatch, getState) => {
     try {
         dispatch(startFetch());
 
