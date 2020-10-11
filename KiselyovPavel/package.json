@@ -9,7 +9,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --fix \"src/**/*.js?(x)\"",
     "prettier": "prettier --write \"src/**/*.js?(x)\"",
-    "server": "json-server db/generate.js --port 3004"
+    "server": "json-server db/generate.js --port 3004",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +22,7 @@
     "axios": "^0.20.0",
     "classnames": "^2.2.6",
     "immer": "^7.0.9",
+    "normalizr": "^3.6.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -27,7 +30,9 @@
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.0",
+    "workbox-core": "^5.1.4",
+    "workbox-precaching": "^5.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
@@ -35,8 +40,13 @@
     "@babel/plugin-transform-runtime": "^7.11.5",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
+    "@storybook/addon-actions": "^6.0.26",
+    "@storybook/addon-essentials": "^6.0.26",
+    "@storybook/addon-links": "^6.0.26",
+    "@storybook/react": "^6.0.26",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
+    "core-js": "^3.6.5",
     "css-loader": "^4.3.0",
     "eslint": "^7.9.0",
     "eslint-config-airbnb": "^18.2.0",
@@ -52,9 +62,12 @@
     "json-server": "^0.16.2",
     "mini-css-extract-plugin": "^0.11.2",
     "prettier": "^2.1.2",
+    "react-is": "^16.13.1",
     "style-loader": "^1.2.1",
     "webpack": "^4.44.1",
+    "webpack-bundle-analyzer": "^3.9.0",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "workbox-webpack-plugin": "^5.1.4"
   }
 }
