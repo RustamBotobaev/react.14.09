@@ -1,1 +1,0 @@
-export { ChatIndex } from './ChatList';

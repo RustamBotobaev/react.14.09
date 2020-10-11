@@ -1,19 +1,28 @@
-import React from "react";
-import { Route, Switch } from "react-router-dom";
-import Home from "../Home.jsx";
-import About from "../About.jsx";
-import Chats from "../Chats.jsx";
-import Layout from "../../components/Layout.jsx";
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import About from '../About';
+import Chats from '../Chats';
+import Home from '../Home';
 
 const RootRouter = () => {
   return (
     <Switch>
-      <Layout>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/about" component={About} />
-        <Route path="/chats/:id" component={Chats} />
-      </Layout>
+      <Route exact path="/">
+        <Home />
+      </Route>
+      <Route path="/chats/:id" component={Chats} />
+      <Route path="/about">
+        <About />
+      </Route>
+      <Route
+        render={() => (
+          <div>
+            <h1>I am 404</h1>
+          </div>
+        )}
+      />
     </Switch>
   );
 };
+
 export default RootRouter;
