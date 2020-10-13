@@ -1,20 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { v4 } from 'uuid';
 import { BOT_NAME } from '../utils/constats';
+import callAPI from '../utils/fetcher';
+
+export const fetchMessages = createAsyncThunk('messages/fetchMessages', async () => {
+  const { data } = await callAPI('/messages');
+  return data;
+});
 
 const initialState = {
-  messages: {
-    1: { id: 1, author: BOT_NAME, messageText: 'Тут никого нет' },
-    2: { id: 2, author: BOT_NAME, messageText: 'Тут тоже никого нет' },
-  },
-  messagesIds: [1, 2],
+  messages: {},
+  messagesIds: [],
   newMessagesIds: [],
 };
 
 export const messagesReducer = createSlice({
   name: 'messages',
   initialState,
-  reducers: { 
+  reducers: {
     addMessage(state, { payload }) {
       const { messageText, author, id } = payload;
 
@@ -31,7 +34,7 @@ export const messagesReducer = createSlice({
     deleteNewMessageId(state, { payload }) {
       state.newMessagesIds = state.newMessagesIds.filter((item) => item !== payload);
     },
-    
+
     deleteMessage(state, { payload }) {
       const { currentChatId, id } = payload;
       const index = state.chatsList[currentChatId].messagesIdList.indexOf(id);
@@ -39,7 +42,15 @@ export const messagesReducer = createSlice({
         state.chatsList[currentChatId].messagesIdList.splice(index, 1);
       }
     },
-   },
+  },
+  extraReducers: {
+    [fetchMessages.fulfilled]: (state, { payload }) => {
+      Object.values(payload).forEach((item) => {
+        state.messages[item.id] = { ...item };
+        state.messagesIds.push(item.id);
+      });
+    },
+  },
 });
 
 export const { addMessage, addNewMessageId, deleteNewMessageId } = messagesReducer.actions;

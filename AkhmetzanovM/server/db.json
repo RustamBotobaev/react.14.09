@@ -1,9 +1,9 @@
 {
   "chats": {
     "1": { "id": 1, "title": "Chat 1", "messagesIdList": [1, 2] },
-    "2": { "id": 2, "title": "Chat 1", "messagesIdList": [1] }
+    "2": { "id": 2, "title": "Chat 2", "messagesIdList": [1] }
   },
-  "mesages": {
+  "messages": {
     "1": { "id": 1, "author": "Bot", "messageText": "Тут никого нет" },
     "2": { "id": 2, "author": "Bot", "messageText": "Тут тоже никого нет" }
   },

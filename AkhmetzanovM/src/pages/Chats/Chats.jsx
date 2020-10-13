@@ -8,14 +8,15 @@ import Header from '../../components/Header';
 import Layout from '../../components/Layout';
 import ChatsList from '../../components/ChatsList';
 import { fetchChats, addChat } from '../../reducers/chatsReducer';
-import { asyncAddMessage } from '../../reducers/messagesReducer';
+import { fetchMessages, asyncAddMessage } from '../../reducers/messagesReducer';
 import { getCurrentMessages, getNewMessagesIds } from '../../selectors/messagesSelectors';
 import { getChatsList, getChatById, getChatTitleById, getUserName } from '../../selectors/chatsSelectors';
 
 class Chats extends Component {
   componentDidMount() {
-    const { fetchChats } = this.props;
+    const { fetchChats, fetchMessages } = this.props;
     fetchChats();
+    fetchMessages();
   }
 
   addChat = () => {
@@ -90,6 +91,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = { addChat, fetchChats, asyncAddMessage };
+const mapDispatchToProps = { addChat, fetchChats, fetchMessages, asyncAddMessage };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chats);

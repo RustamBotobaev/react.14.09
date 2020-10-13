@@ -3,14 +3,15 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import callAPI from '../utils/fetcher';
 import { addMessage } from './messagesReducer';
 
-
 const initialState = {
-  chatsList: {
-    1: { id: 1, title: 'Chat 1', messagesIdList: [1, 2] },
-    2: { id: 2, title: 'Chat 2', messagesIdList: [1] },
-  },
-  chatsIds: [1, 2],
+  chatsList: {},
+  chatsIds: [],
 };
+
+export const fetchChats = createAsyncThunk('chats/fetchChats', async () => {
+  const { data } = await callAPI('/chats');
+  return data;
+});
 
 export const chatsReducer = createSlice({
   name: 'chats',
@@ -27,15 +28,16 @@ export const chatsReducer = createSlice({
       const { currentChatId, id } = payload;
 
       state.chatsList[currentChatId].messagesIdList.push(id);
-    }
-  }
+    },
+    [fetchChats.fulfilled]: (state, { payload }) => {
+      Object.values(payload).forEach((item) => {
+        state.chatsList[item.id] = { ...item, messagesIdList: item.messagesIdList.map((id) => id) };
+        state.chatsIds.push(item.id);
+      });
+    },
+  },
 });
 
 export const { addChat } = chatsReducer.actions;
-
-export const fetchChats = createAsyncThunk('chats/fetchChats', async () => {
-  const { data } = await callAPI('/chats');
-  return data;
-});
 
 export default chatsReducer.reducer;

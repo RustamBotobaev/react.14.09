@@ -2,8 +2,8 @@ export const getCurrentMessages = (state, id) => {
   const chatsList = state.chats.chatsList;
   const messages = state.messages.messages;
 
-  if (id in chatsList) {
-    return chatsList[id].messagesIdList.map((messId) => messages[messId]);
+  if (id in chatsList && id in messages) {
+    return chatsList[id].messagesIdList.map((messageId) => messages[messageId]);
   }
   return [];
 };
