@@ -1,35 +1,54 @@
 import {
-createSlice
+    createSlice
 } from '@reduxjs/toolkit';
+import callAPI from '../utils/fetcher';
 
 export const profileSlice = createSlice({
-name: 'profile',
-initialState: {
-    firstName: 'Alex',
-    lastName: 'Prom'
-},
-reducers: {
-    getProfile() {},
-},
+    name: 'profile',
+    initialState: {
+        avatar: '',
+        firstName: '',
+        lastName: '',
+        isFetching: false
+    },
+    reducers: {
+        startFetch: state => {
+            state.isFetching = true;
+        },
+        endFetch: state => {
+            state.isFetching = false;
+        },
+        getProfile: (state, {
+            payload
+        }) => {
+            return payload;
+        },
+    },
 });
 
 export const {
-getProfile
-} = profileSlice;
+    getProfile,
+    startFetch,
+    endFetch
+} = profileSlice.actions;
 
-export const asyncGetProfile = () => async dispatch => {
-try {
-    const {
-        data,
-        status
-    } = await fetch('who_am_i');
-    if (status == 200) {
-        localStorage.setItem('profile', data);
-        dispatch(getProfile(data));
+export const asyncGetProfile = () => async (dispatch, getState) => {
+    try {
+        dispatch(startFetch());
+
+        const {
+            data,
+            status
+        } = await callAPI('/profile');
+        if (status === 200) {
+            dispatch(getProfile(data));
+        }
+    } catch (e) {
+        console.log(e);
+        console.log('error interceptor');
+    } finally {
+        dispatch(endFetch());
     }
-} catch (e) {
-    console.log('error interceprto');
-}
 };
 
 export default profileSlice.reducer;

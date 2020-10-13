@@ -1,58 +1,135 @@
-import {v4 as uuidv4} from 'uuid';
-import produce from 'immer';
-import {ADD_CHAT} from '../actions/chatActions';
-import {addMessage} from './messagesReducer';
+import {
+    createSlice,
+    createAsyncThunk,
+    createEntityAdapter
+} from '@reduxjs/toolkit';
+import {
+    v4 as uuidv4
+} from 'uuid';
+import {
+    normalize,
+    schema
+} from 'normalizr';
+import callAPI from '../utils/fetcher';
+import {
+    getCurrentMessages
+} from '../selectors/chatsSelectors';
 
-const initialState = {
-byIds: {
-    1: {
-        id: 1,
-        title: 'Чат 1',
-        messageList: [1, 2, 3]
-    },
-    2: {
-        id: 2,
-        title: 'Чат 2',
-        messageList: [3, 2]
-    },
-    3: {
-        id: 3,
-        title: 'Чат 3',
-        messageList: [2, 3]
-    },
-},
-ids: [1, 2, 3],
-};
+const chatsAdapter = createEntityAdapter();
 
-const reducer = (state = initialState, action) => {
-switch (action.type) {
-    case ADD_CHAT: {
-        const newId = uuidv4();
-        return {
-            ...state,
-            byIds: {
-                ...state.byIds,
-                [newId]: {
-                    id: newId,
-                    title: `Чат ${newId}`,
-                    messageList: []
-                },
-            },
-            ids: [...state.ids, newId],
-        };
-    }
-    case addMessage.toString(): {
+export const chatsSelector = chatsAdapter.getSelectors(state => state.chats);
+
+export const fetchChats = createAsyncThunk('chats/fetchChats', async () => {
+    const {
+        data
+    } = await callAPI('/chats');
+    const msgSchema = new schema.Entity('messageList');
+    const chatsSchema = new schema.Entity('chats', {
+        messageList: [msgSchema]
+    });
+    const result = normalize({
+        chats: data
+    }, {
+        chats: [chatsSchema],
+    }, );
+    return result.entities;
+});
+
+export const postChat = createAsyncThunk('chats/postChats', async () => {
+    const newId = uuidv4();
+    const newChat = {
+        id: newId,
+        title: `Chat ${newId}`,
+        messageList: []
+    };
+    const {
+        data
+    } = await callAPI.post('/chats', {
+        ...newChat
+    });
+    return data;
+});
+
+export const deleteChat = createAsyncThunk('chats/deleteChat', async id => {
+    await callAPI.delete(`/chats/${id}`);
+    return id;
+});
+
+export const addMessage = createAsyncThunk(
+    'chats/patchChat',
+    async (messageData, {
+        getState
+    }) => {
         const {
-            id,
-            chatId
-        } = action.payload;
-        return produce(state, draft => {
-            draft.byIds[chatId].messageList.push(id);
+            chatId,
+            author,
+            message,
+            id
+        } = messageData;
+        const messages = getCurrentMessages(getState(), chatId);
+        await callAPI.patch(`/chats/${chatId}`, {
+            messageList: [...messages, {
+                author,
+                message,
+                id
+            }],
         });
-    }
-    default:
-        return state;
-}
-};
+        return messageData;
+    },
+);
 
-export default reducer;
+export const chatsSlice = createSlice({
+    name: 'chats',
+    initialState: chatsAdapter.getInitialState({
+        isFetching: false,
+    }),
+    reducers: {},
+    extraReducers: {
+        [fetchChats.pending]: state => {
+            state.isFetching = true;
+        },
+        [fetchChats.fulfilled]: (state, {
+            payload
+        }) => {
+            state.isFetching = false;
+            chatsAdapter.upsertMany(state, payload.chats);
+        },
+        [postChat.pending]: state => {
+            state.isFetching = true;
+        },
+        [postChat.fulfilled]: (state, {
+            payload
+        }) => {
+            state.isFetching = false;
+            chatsAdapter.addOne(state, payload);
+        },
+        [addMessage.pending]: state => {
+            state.isFetching = true;
+        },
+        [addMessage.fulfilled]: (state, {
+            payload
+        }) => {
+            const {
+                id,
+                chatId
+            } = payload;
+            state.isFetching = false;
+            state.entities[chatId].messageList.push(id);
+        },
+        [deleteChat.pending]: state => {
+            state.isFetching = true;
+        },
+        [deleteChat.fulfilled]: (state, {
+            payload
+        }) => {
+            state.isFetching = false;
+            chatsAdapter.removeOne(state, payload);
+        },
+    },
+});
+
+export const {
+    addChatToState
+} = chatsSlice.actions;
+
+export default chatsSlice.reducer;
