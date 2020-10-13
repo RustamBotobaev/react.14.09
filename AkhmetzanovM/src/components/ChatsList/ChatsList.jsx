@@ -1,5 +1,6 @@
 import React from 'react';
 import cn from 'classnames';
+import PropTypes from 'prop-types';
 import {
   Drawer,
   List,
@@ -13,9 +14,6 @@ import {
 } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 import { AccountCircle } from '@material-ui/icons';
-import { useDispatch, useSelector } from 'react-redux';
-import { addChatToState } from '../../reducers/chatReducer';
-import { getChatsList } from '../../selectors/chatsSelector';
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: {
@@ -52,15 +50,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChatsList = () => {
+const ChatsList = ({ chats, addChat }) => {
   const classes = useStyles();
-
-  const chats = useSelector(getChatsList);
-  const dispatch = useDispatch();
-
-  const addChat = () => {
-    dispatch(addChatToState());
-  };
 
   return (
     <Drawer
@@ -96,6 +87,11 @@ const ChatsList = () => {
       </List>
     </Drawer>
   );
+};
+
+ChatsList.propTypes = {
+  chats: PropTypes.any.isRequired,
+  addChat: PropTypes.func.isRequired,
 };
 
 export default ChatsList;

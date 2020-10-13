@@ -19,6 +19,7 @@ let listRef;
 
 const MessageList = ({ messages, userName, newMessagesIds }) => {
   const classes = useStyles();
+  
   listRef = useRef();
 
   useEffect(() => {

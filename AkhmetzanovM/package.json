@@ -7,11 +7,14 @@
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@reduxjs/toolkit": "^1.4.0",
+    "axios": "^0.20.0",
     "babel-loader": "^8.1.0",
     "classnames": "^2.2.6",
     "css-loader": "^4.3.0",
     "html-webpack-plugin": "^4.4.1",
     "immer": "^7.0.9",
+    "json-server": "^0.16.2",
+    "normalizr": "^3.6.0",
     "prettier": "^2.1.2",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
@@ -29,6 +32,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
+    "@babel/plugin-transform-runtime": "^7.11.5",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
     "babel-eslint": "^10.1.0",
@@ -43,7 +47,8 @@
     "build": "webpack-dev-server --mode=production",
     "start": "webpack-dev-server",
     "lint": "eslint --fix \"src/**/*.js?(x)\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "json-server --watch server/db.json --port 3005"
   },
   "keywords": [],
   "author": "",

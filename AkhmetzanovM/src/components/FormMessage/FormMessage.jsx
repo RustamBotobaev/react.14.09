@@ -2,9 +2,7 @@ import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, InputAdornment, OutlinedInput, withStyles } from '@material-ui/core';
 import { Send } from '@material-ui/icons';
-import { connect } from 'react-redux';
 import { v4 } from 'uuid';
-import { asyncAddMessage } from '../../reducers/chatReducer';
 
 const styles = (theme) => ({
   root: {
@@ -38,7 +36,6 @@ class FormMessage extends Component {
    * Ставит фокус на поле для ввода сообщения. Нужно чтобы постоянно не приходилось кликать на текстовое поле.
    */
   inputFocus() {
-    // this.textInput.current.focus();
     const { current } = this.inputRef;
     if (current) {
       current.focus();
@@ -52,10 +49,9 @@ class FormMessage extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     const { messageText } = this.state;
-    const { asyncAddMessage, currentChatId, userName } = this.props;
+    const { addMessage, currentChatId, userName } = this.props;
     const newId = v4();
-    messageText &&
-      asyncAddMessage({ currentChatId: currentChatId, messageText: messageText, author: userName, id: newId });
+    messageText && addMessage({ currentChatId: currentChatId, messageText: messageText, author: userName, id: newId });
 
     this.setState({
       messageText: '',
@@ -84,7 +80,6 @@ class FormMessage extends Component {
           inputProps={{
             ref: this.inputRef,
           }}
-          // ref={this.textInput}
           endAdornment={
             <InputAdornment position="end">
               <IconButton edge="end" onClick={this.onSubmit}>
@@ -99,16 +94,10 @@ class FormMessage extends Component {
 }
 
 FormMessage.propTypes = {
-  asyncAddMessage: PropTypes.func.isRequired,
+  addMessage: PropTypes.func.isRequired,
   currentChatId: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
   classes: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = {
-  asyncAddMessage,
-};
-
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(FormMessage));
+export default withStyles(styles)(FormMessage);
