@@ -5,7 +5,9 @@ import { ListItem, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   link: {
-    display: 'block',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     width: '100%',
     padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
     fontSize: '1rem',
@@ -21,12 +23,13 @@ const useStyles = makeStyles(theme => ({
 
 function Link(props) {
   const classes = useStyles();
-  const { title } = props;
+  const { title, children } = props;
 
   return (
     <ListItem button className={classes.button}>
       <RRDLink {...props} className={classes.link}>
-        {title}
+        <span>{title}</span>
+        {children}
       </RRDLink>
     </ListItem>
   );

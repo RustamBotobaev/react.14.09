@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Redirect, useParams } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
@@ -8,35 +8,29 @@ import { addMessage as addMessageToStore } from '../../features/messages/message
 
 import MessageForm from './MessageForm';
 import MessagesList from './MessagesList';
+import getCurrentMessages from '../../features/messages/messagesSelectors';
+import { getChatById } from '../../features/chats/chatsSelectors';
 
 const Messages = () => {
-  const { id: chatId } = useParams();
-  const chat = useSelector(state => state.messages.chats[chatId]);
+  const { id } = useParams();
+  const messages = useSelector(getCurrentMessages(id));
+  const isChatExist = useSelector(getChatById(id));
   const dispatch = useDispatch();
 
-  const addMessage = ({ author, message }) => {
+  const addMessage = ({ author, message, chatId = id }) => {
     const newMessage = { id: uuid(), chatId, author, message };
 
     dispatch(addMessageToStore(newMessage));
   };
 
-  useEffect(() => {
-    const { messages } = chat;
-    const lastMessage = messages[messages.length - 1];
-
-    if (lastMessage.author !== 'Bot') {
-      setTimeout(() => addMessage({ author: 'Bot', message: 'Ok!' }), 300);
-    }
-  });
-
-  if (!chat) {
+  if (!isChatExist) {
     return <Redirect to="/" />;
   }
 
   return (
     <>
       <MessageForm addMessage={addMessage} />
-      <MessagesList messages={chat.messages} />
+      <MessagesList messages={messages} />
     </>
   );
 };

@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { Button, makeStyles, TextField } from '@material-ui/core';
 
-import { addChat } from '../../features/messages/messagesSlice';
+import { addChat } from '../../features/chats/chatsSlice';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -23,12 +23,7 @@ const CreateChat = () => {
   const dispatch = useDispatch();
 
   const [chatName, setChatName] = useState('');
-
   const [inputError, setInputError] = useState(false);
-
-  const clearInputs = () => {
-    setChatName('');
-  };
 
   const testInputs = () => {
     setInputError(chatName.length === 0);
@@ -36,9 +31,7 @@ const CreateChat = () => {
     return chatName.length > 0;
   };
 
-  const onChange = ({ target }) => {
-    const { value } = target;
-
+  const onChange = ({ target: { value } }) => {
     setChatName(value);
   };
 
@@ -48,7 +41,7 @@ const CreateChat = () => {
     if (testInputs()) {
       dispatch(addChat({ chatName }));
 
-      clearInputs();
+      setChatName('');
     }
   };
 

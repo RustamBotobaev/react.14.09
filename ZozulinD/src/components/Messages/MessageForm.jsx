@@ -43,9 +43,7 @@ const MessageForm = ({ addMessage }) => {
     return input.author.length > 0 && input.message.length > 0;
   };
 
-  const onChange = ({ target }) => {
-    const { name, value } = target;
-
+  const onChange = ({ target: { name, value } }) => {
     setInput({
       ...input,
       [name]: value,
@@ -53,12 +51,11 @@ const MessageForm = ({ addMessage }) => {
   };
 
   const onSubmit = e => {
-    const { author, message } = input;
-
     e.preventDefault();
 
     if (testInputs()) {
-      addMessage({ author, message });
+      addMessage(input);
+
       clearInputs();
     }
   };
