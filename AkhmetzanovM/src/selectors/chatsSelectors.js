@@ -7,10 +7,6 @@ export const getChatsList = (state) => {
   return [];
 };
 
-export const getUserName = (state) => {
-  return state.session.userName;
-};
-
 export const getChatTitleById = (state, chatId) => {
   if (chatId in state.chats.chatsList) {
     return state.chats.chatsList[chatId].title;

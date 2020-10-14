@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import cn from 'classnames';
 import PropTypes from 'prop-types';
 import {
@@ -94,4 +94,4 @@ ChatsList.propTypes = {
   addChat: PropTypes.func.isRequired,
 };
 
-export default ChatsList;
+export default memo(ChatsList);

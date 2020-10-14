@@ -7,10 +7,11 @@ import FormMessage from '../../components/FormMessage';
 import Header from '../../components/Header';
 import Layout from '../../components/Layout';
 import ChatsList from '../../components/ChatsList';
-import { fetchChats, addChat } from '../../reducers/chatsReducer';
-import { fetchMessages, asyncAddMessage } from '../../reducers/messagesReducer';
+import { fetchChats, addChat, postChat } from '../../reducers/chatsReducer';
+import { fetchMessages, asyncAddMessage, asyncDeleteMessage } from '../../reducers/messagesReducer';
 import { getCurrentMessages, getNewMessagesIds } from '../../selectors/messagesSelectors';
-import { getChatsList, getChatById, getChatTitleById, getUserName } from '../../selectors/chatsSelectors';
+import { getChatsList, getChatById, getChatTitleById } from '../../selectors/chatsSelectors';
+import { getUserName } from '../../selectors/profileSelectors';
 
 class Chats extends Component {
   componentDidMount() {
@@ -24,15 +25,20 @@ class Chats extends Component {
     addChat();
   };
 
-  addMessage = ({ currentChatId, messageText, author, id }) => {
+  addMessage = ({ messageText, author, id }) => {
     const { asyncAddMessage: addMessage } = this.props;
+    const { id: currentChatId } = this.props.match.params;
     addMessage({ currentChatId: currentChatId, messageText: messageText, author: author, id: id });
+  };
+
+  deleteMessage = (messageId) => {
+    const { asyncDeleteMessage: deleteMessage } = this.props;
+    deleteMessage(messageId);
   };
 
   render() {
     const { newMessagesIds, messages, userName, chats, currentChatTitle, idInChats } = this.props;
-    const { id } = this.props.match.params;
-    const { addChat, addMessage } = this;
+    const { addChat, addMessage, deleteMessage } = this;
 
     return (
       <Layout>
@@ -40,8 +46,13 @@ class Chats extends Component {
         {idInChats ? (
           <>
             <Header currentChatTitle={currentChatTitle} />
-            <MessageList messages={messages} userName={userName} newMessagesIds={newMessagesIds} />
-            <FormMessage currentChatId={id} userName={userName} addMessage={addMessage} />
+            <MessageList
+              messages={messages}
+              userName={userName}
+              newMessagesIds={newMessagesIds}
+              deleteMessage={deleteMessage}
+            />
+            <FormMessage userName={userName} addMessage={addMessage} />
           </>
         ) : (
           <Container>
@@ -56,8 +67,11 @@ class Chats extends Component {
 Chats.propTypes = {
   match: PropTypes.objectOf(PropTypes.any).isRequired,
   addChat: PropTypes.func.isRequired,
+  postChat: PropTypes.func.isRequired,
   fetchChats: PropTypes.func.isRequired,
+  fetchMessages: PropTypes.func.isRequired,
   asyncAddMessage: PropTypes.func.isRequired,
+  asyncDeleteMessage: PropTypes.func.isRequired,
   messages: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.any,
@@ -91,6 +105,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = { addChat, fetchChats, fetchMessages, asyncAddMessage };
+const mapDispatchToProps = { addChat, fetchChats, fetchMessages, asyncAddMessage, asyncDeleteMessage, postChat };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chats);

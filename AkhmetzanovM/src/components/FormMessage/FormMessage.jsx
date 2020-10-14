@@ -49,9 +49,9 @@ class FormMessage extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     const { messageText } = this.state;
-    const { addMessage, currentChatId, userName } = this.props;
+    const { addMessage, userName } = this.props;
     const newId = v4();
-    messageText && addMessage({ currentChatId: currentChatId, messageText: messageText, author: userName, id: newId });
+    messageText && addMessage({ messageText: messageText, author: userName, id: newId });
 
     this.setState({
       messageText: '',
@@ -95,7 +95,6 @@ class FormMessage extends Component {
 
 FormMessage.propTypes = {
   addMessage: PropTypes.func.isRequired,
-  currentChatId: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
   classes: PropTypes.objectOf(PropTypes.any).isRequired,
 };

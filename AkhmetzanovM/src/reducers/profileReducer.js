@@ -8,14 +8,19 @@ export const fetchProfile = createAsyncThunk('profile/fetchProfile', async () =>
 
 const initialState = {
   userName: '',
+  isFetching: false,
 };
 
 export const profileReducer = createSlice({
-  name: 'session',
+  name: 'profile',
   initialState,
   reducers: {},
   extraReducers: {
+    [fetchProfile.pending]: (state) => {
+      state.isFetching = true;
+    },
     [fetchProfile.fulfilled]: (state, { payload }) => {
+      state.isFetching = false;
       state.userName = payload.name;
     },
   },

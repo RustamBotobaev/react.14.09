@@ -34,13 +34,10 @@ export const messagesReducer = createSlice({
     deleteNewMessageId(state, { payload }) {
       state.newMessagesIds = state.newMessagesIds.filter((item) => item !== payload);
     },
-
     deleteMessage(state, { payload }) {
-      const { currentChatId, id } = payload;
-      const index = state.chatsList[currentChatId].messagesIdList.indexOf(id);
-      if (index > -1) {
-        state.chatsList[currentChatId].messagesIdList.splice(index, 1);
-      }
+      const { messageId } = payload;
+      state.messagesIds = state.messagesIds.filter((item) => item != messageId);
+      delete state.messages[messageId];
     },
   },
   extraReducers: {
@@ -53,7 +50,7 @@ export const messagesReducer = createSlice({
   },
 });
 
-export const { addMessage, addNewMessageId, deleteNewMessageId } = messagesReducer.actions;
+export const { addMessage, addNewMessageId, deleteNewMessageId, deleteMessage } = messagesReducer.actions;
 
 export const asyncAddMessage = (payload) => (dispatch) => {
   const { author, currentChatId } = payload;
@@ -66,6 +63,10 @@ export const asyncAddMessage = (payload) => (dispatch) => {
   }
 
   dispatch(addMessage(payload));
+};
+
+export const asyncDeleteMessage = (payload) => (dispatch) => {
+  dispatch(deleteMessage(payload));
 };
 
 export default messagesReducer.reducer;
