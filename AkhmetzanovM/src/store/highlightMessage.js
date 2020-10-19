@@ -1,4 +1,4 @@
-import { addMessage, addNewMessageId, deleteNewMessageId } from '../reducers/chatReducer';
+import { addMessage, addNewMessageId, deleteNewMessageId } from '../reducers/messagesReducer';
 
 const highlightMessage = ({ dispatch }) => (next) => (action) => {
   const { type, payload } = action;

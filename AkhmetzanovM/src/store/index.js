@@ -1,13 +1,14 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-// import logger from 'redux-logger';
-import chatSliceReducer from '../reducers/chatReducer';
-import sessionSliceReducer from '../reducers/sessionReducer';
+import chatsReducer from '../reducers/chatsReducer';
+import messagesReducer from '../reducers/messagesReducer';
+import profileReducer from '../reducers/profileReducer';
 import highlightMessage from './highlightMessage';
 
 export default configureStore({
   reducer: {
-    chats: chatSliceReducer,
-    session: sessionSliceReducer,
+    chats: chatsReducer,
+    messages: messagesReducer,
+    profile: profileReducer,
   },
   middleware: [highlightMessage, ...getDefaultMiddleware()],
 });
