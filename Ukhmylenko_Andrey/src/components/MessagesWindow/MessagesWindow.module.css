@@ -1,0 +1,7 @@
+.messages_window {
+  padding: 10px;
+  border: 2px solid darkgray;
+  border-top-right-radius: 10px;
+  flex-grow: 1;
+  overflow-y: auto;
+}

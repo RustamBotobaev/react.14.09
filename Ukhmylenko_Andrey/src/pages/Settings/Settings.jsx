@@ -1,12 +1,12 @@
 import React from 'react';
 import Layout from '../../components/Layout';
 
-const Profile = () => {
+const Settings = () => {
   return (
     <Layout>
-      <h1>Профиль</h1>
+      <h1>Настройки</h1>
     </Layout>
   );
 };
 
-export default Profile;
+export default Settings;
