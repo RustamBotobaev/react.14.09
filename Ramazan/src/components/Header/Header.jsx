@@ -4,6 +4,8 @@ import cn from 'classnames';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { AppBar, Badge, IconButton, Toolbar, Typography, makeStyles } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { getUsersName } from '../../selectors/profileSelectors';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -34,6 +36,10 @@ const useStyles = makeStyles(theme => ({
 
 const Header = () => {
   const classes = useStyles();
+  /* С помощью хука useSelector мы получаем наш селектор getUsersName и присваиваем его переменной user
+  Далее в блок Typography мы передаем user которая отображается на странице */
+
+  const user = useSelector(getUsersName);
 
   return (
     <AppBar position="absolute" className={cn(classes.appBar, classes.appBarShift)}>
@@ -47,7 +53,7 @@ const Header = () => {
           <MenuIcon />
         </IconButton>
         <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-          Dashboard
+          {`${user}'s chats`}
         </Typography>
         <IconButton color="inherit">
           <Badge badgeContent={4} color="secondary">

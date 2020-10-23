@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 import cn from 'classnames';
+import PropTypes from 'prop-types';
 import {
   Drawer,
   List,
@@ -13,9 +14,6 @@ import {
 } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 import { AccountCircle } from '@material-ui/icons';
-import { useDispatch, useSelector } from 'react-redux';
-import { addChatToState } from '../../reducers/chatReducer';
-import { getChatsList } from '../../selectors/chatsSelector';
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: {
@@ -52,15 +50,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChatsList = () => {
+const ChatsList = ({ chats, addChat }) => {
   const classes = useStyles();
-
-  const chatsList = useSelector(getChatsList);
-  const dispatch = useDispatch();
-
-  const addChat = () => {
-    dispatch(addChatToState());
-  };
 
   return (
     <Drawer
@@ -74,7 +65,7 @@ const ChatsList = () => {
         <OutlinedInput type="search" className={classes.search} placeholder="Найти чат" />
       </div>
       <List className={classes.list}>
-        {chatsList.map(({ id, title }) => (
+        {chats.map(({ id, title }) => (
           <ListItem button key={id} component={NavLink} to={`/chat/${id}`} activeClassName="Mui-selected">
             <ListItemAvatar>
               <Avatar>{title[0]}</Avatar>
@@ -98,4 +89,9 @@ const ChatsList = () => {
   );
 };
 
-export default ChatsList;
+ChatsList.propTypes = {
+  chats: PropTypes.any.isRequired,
+  addChat: PropTypes.func.isRequired,
+};
+
+export default memo(ChatsList);

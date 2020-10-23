@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, ListSubheader, makeStyles } from '@material-ui/core';
+import { Button, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, ListSubheader, makeStyles } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
@@ -8,6 +8,9 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import cn from 'classnames';
 import { Link, NavLink } from 'react-router-dom';
 import mockChats from './mockChats';
+import { useDispatch, useSelector } from 'react-redux';
+import { addChatToState } from '../../actions/chatActions';
+import { getCurrentChat } from '../../selectors/chatsSelectors';
 
 const useStyles = makeStyles(theme => ({
     drawerPaper: {
@@ -36,6 +39,14 @@ const useStyles = makeStyles(theme => ({
 
 const ChatList = () => {
     const classes = useStyles();
+
+    const chats = useSelector(getCurrentChat);
+    const dispatch = useDispatch();
+
+    const addChat = () => {
+        dispatch(addChatToState());
+    };
+
     return (
         <Drawer
             variant="permanent"
@@ -51,17 +62,18 @@ const ChatList = () => {
             </div>
             <Divider />
             <List>
-                {mockChats.map(({ id, name }) => (
+                {chats.map(({ id, title }) => (
                     <NavLink key={id} to={`/chats/${id}`} activeClassName={classes.active}>
                         <ListItem button>
                         <ListItemIcon>
                             <DashboardIcon />
                         </ListItemIcon>
-                        <ListItemText primary={name} />
+                        <ListItemText primary={title} />
                         </ListItem>
                     </NavLink>
                 ))}                
             </List>
+            <Button type="button" onClick={addChat}>add chat</Button>
             <Divider className={classes.secondList}/>
             <List>
                 <div>
@@ -80,4 +92,4 @@ const ChatList = () => {
     )
 }
 
-export default ChatList
+export default ChatList;

@@ -1,20 +1,23 @@
-import {
-createSelector
-} from '@reduxjs/toolkit';
-
-const getChatsById = state => state.chats.byIds;
-const getChatsIDs = state => state.chats.ids;
-
-export const getChatsList = createSelector(getChatsById, getChatsIDs, (byId, ids) =>
-ids.map(id => byId[id]),
-);
+const getChatsById = state => state.chats.entities;
 
 export const getCurrentMessages = (state, id) => {
-const chats = state.chats.byIds;
-const messages = state.messages.byIds;
+    const chats = state.chats.entities;
+    const messages = state.messages.entities;
 
-if (id in chats) {
-    return chats[id].messageList.map(messId => messages[messId]);
-}
-return [];
+    if (id in chats) {
+        return chats[id].messageList.map(messId => messages[messId]);
+    }
+    return [];
+};
+
+export const getActiveMessages = store => store.messages.active;
+
+export const getIsFetching = store => store.chats.isFetching;
+
+export const getChatTitle = (store, id) => {
+    const chatsById = getChatsById(store);
+    if (id in chatsById) {
+        return chatsById[id].title;
+    }
+    return '';
 };

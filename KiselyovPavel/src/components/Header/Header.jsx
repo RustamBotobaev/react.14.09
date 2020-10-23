@@ -1,10 +1,20 @@
 import React from 'react';
 import cn from 'classnames';
-import { AppBar, Badge, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
+import {
+  AppBar,
+  Avatar,
+  Badge,
+  IconButton,
+  makeStyles,
+  Toolbar,
+  Typography,
+} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { useSelector } from 'react-redux';
-import { getFullName } from '../../selectors/profileSelectors';
+import { getAvatar, getFullName } from '../../selectors/profileSelectors';
+import { useParams } from 'react-router-dom';
+import { getChatTitle } from '../../selectors/chatsSelectors';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -33,12 +43,17 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1,
+    marginLeft: theme.spacing(1),
   },
 }));
 
 const Header = () => {
   const classes = useStyles();
+  const { id } = useParams();
+
   const fullName = useSelector(getFullName);
+  const chatTitle = useSelector(state => getChatTitle(state, id));
+  const avatar = useSelector(getAvatar);
 
   return (
     <AppBar position="absolute" className={cn(classes.appBar, classes.appBarShift)}>
@@ -51,15 +66,29 @@ const Header = () => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography
-          component="h1"
-          variant="h6"
-          color="inherit"
-          noWrap
-          className={classes.title}
-        >
-          {`${fullName}'s chats`}
-        </Typography>
+        <Avatar src={avatar} alt={fullName} />
+        {!!fullName && (
+          <Typography
+            component="h1"
+            variant="h6"
+            color="inherit"
+            noWrap
+            className={classes.title}
+          >
+            {`${fullName}'s chats`}
+          </Typography>
+        )}
+        {!!chatTitle && (
+          <Typography
+            component="h1"
+            variant="h6"
+            color="inherit"
+            noWrap
+            className={classes.title}
+          >
+            {chatTitle}
+          </Typography>
+        )}
         <IconButton color="inherit">
           <Badge badgeContent={4} color="secondary">
             <NotificationsIcon />

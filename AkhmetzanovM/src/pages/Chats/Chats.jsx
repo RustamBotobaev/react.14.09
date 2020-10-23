@@ -7,31 +7,52 @@ import FormMessage from '../../components/FormMessage';
 import Header from '../../components/Header';
 import Layout from '../../components/Layout';
 import ChatsList from '../../components/ChatsList';
-import { getCurrentMessages } from '../../selectors/chatsSelector';
-import { addChatToState } from '../../reducers/chatReducer';
+import { fetchChats, addChat, postChat } from '../../reducers/chatsReducer';
+import { fetchMessages, asyncAddMessage, asyncDeleteMessage } from '../../reducers/messagesReducer';
+import { getCurrentMessages, getNewMessagesIds } from '../../selectors/messagesSelectors';
+import { getChatsList, getChatById, getChatTitleById } from '../../selectors/chatsSelectors';
+import { getUserName } from '../../selectors/profileSelectors';
 
 class Chats extends Component {
-  state = {
-    userName: 'Bob',
+  componentDidMount() {
+    const { fetchChats, fetchMessages } = this.props;
+    fetchChats();
+    fetchMessages();
+  }
+
+  addChat = () => {
+    const { addChat } = this.props;
+    addChat();
   };
 
-  /**
-   * Проверяет, чьё сообщение было последним и если это не бот, то запускает родительский метод автоответа
-   */
-  componentDidUpdate() {}
+  addMessage = ({ messageText, author, id }) => {
+    const { asyncAddMessage: addMessage } = this.props;
+    const { id: currentChatId } = this.props.match.params;
+    addMessage({ currentChatId: currentChatId, messageText: messageText, author: author, id: id });
+  };
+
+  deleteMessage = (messageId) => {
+    const { asyncDeleteMessage: deleteMessage } = this.props;
+    deleteMessage(messageId);
+  };
 
   render() {
-    const { chatsList, messages, userName } = this.props;
-    const { id } = this.props.match.params;
+    const { newMessagesIds, messages, userName, chats, currentChatTitle, idInChats } = this.props;
+    const { addChat, addMessage, deleteMessage } = this;
 
     return (
       <Layout>
-        <ChatsList />
-        {id in chatsList ? (
+        <ChatsList chats={chats} addChat={addChat} />
+        {idInChats ? (
           <>
-            <Header currentChatId={id} />
-            <MessageList messages={messages} userName={userName} />
-            <FormMessage currentChatId={id} userName={userName} />
+            <Header currentChatTitle={currentChatTitle} />
+            <MessageList
+              messages={messages}
+              userName={userName}
+              newMessagesIds={newMessagesIds}
+              deleteMessage={deleteMessage}
+            />
+            <FormMessage userName={userName} addMessage={addMessage} />
           </>
         ) : (
           <Container>
@@ -45,9 +66,12 @@ class Chats extends Component {
 
 Chats.propTypes = {
   match: PropTypes.objectOf(PropTypes.any).isRequired,
-  chatsList: PropTypes.any.isRequired,
-  userName: PropTypes.string.isRequired,
-  addChatToState: PropTypes.func.isRequired,
+  addChat: PropTypes.func.isRequired,
+  postChat: PropTypes.func.isRequired,
+  fetchChats: PropTypes.func.isRequired,
+  fetchMessages: PropTypes.func.isRequired,
+  asyncAddMessage: PropTypes.func.isRequired,
+  asyncDeleteMessage: PropTypes.func.isRequired,
   messages: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.any,
@@ -55,17 +79,32 @@ Chats.propTypes = {
       message: PropTypes.string,
     }),
   ).isRequired,
+  chats: PropTypes.any.isRequired,
+  newMessagesIds: PropTypes.any.isRequired,
+  userName: PropTypes.string.isRequired,
+  currentChatTitle: PropTypes.string.isRequired,
+  idInChats: PropTypes.oneOfType([
+    PropTypes.shape({
+      id: PropTypes.any,
+      title: PropTypes.string,
+      messagesIdList: PropTypes.array,
+    }),
+    PropTypes.bool,
+  ]).isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.match.params;
   return {
     messages: getCurrentMessages(state, id),
-    userName: state.session.userName,
-    chatsList: state.chats.chatsList,
+    chats: getChatsList(state),
+    newMessagesIds: getNewMessagesIds(state),
+    userName: getUserName(state),
+    currentChatTitle: getChatTitleById(state, id),
+    idInChats: getChatById(state, id),
   };
 };
 
-const mapDispatchToProps = { addChatToState };
+const mapDispatchToProps = { addChat, fetchChats, fetchMessages, asyncAddMessage, asyncDeleteMessage, postChat };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chats);

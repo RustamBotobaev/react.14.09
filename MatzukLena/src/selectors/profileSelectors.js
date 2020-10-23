@@ -3,3 +3,6 @@ export const getFullName = state => {
     return `${firstName} ${lastName}`;
   };
   
+  export const getAvatar = state => state.profile.avatar;
+
+  export const getIsProfileFetching = state => state.profile.isFetching;

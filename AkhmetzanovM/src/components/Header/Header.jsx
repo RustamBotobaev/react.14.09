@@ -2,7 +2,6 @@ import React from 'react';
 import cn from 'classnames';
 import { AppBar, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -18,16 +17,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = ({ currentChatId }) => {
+const Header = ({ currentChatTitle }) => {
   const classes = useStyles();
 
-  const chatList = useSelector((store) => store.chats.chatsList);
-  
-  return (
+   return (
     <AppBar position="absolute" className={cn(classes.appBar, classes.appBarShift)}>
       <Toolbar className={classes.toolbar}>
         <Typography component="h2" variant="h6" color="inherit" noWrap className={classes.title}>
-          {chatList[currentChatId].title}
+          {currentChatTitle}
         </Typography>
       </Toolbar>
     </AppBar>
@@ -35,7 +32,7 @@ const Header = ({ currentChatId }) => {
 };
 
 Header.propTypes = {
-  currentChatId: PropTypes.string.isRequired,
+  currentChatTitle: PropTypes.string.isRequired,
 };
 
 export default Header;

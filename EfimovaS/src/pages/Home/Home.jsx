@@ -22,7 +22,7 @@ const Home = () => {
               <ListItemIcon>
                 <ShoppingCartIcon />
               </ListItemIcon>
-              <ListItemText primary="Chat 2" />
+              <ListItemText primary="Chat" />
             </ListItem>
           </Link>
         </List>

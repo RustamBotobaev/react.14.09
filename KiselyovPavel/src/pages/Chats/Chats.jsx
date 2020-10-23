@@ -7,26 +7,36 @@ import { connect } from 'react-redux';
 import MessageList from '../../components/MessageList';
 import FormMessage from '../../components/FormMessage';
 import Layout from '../../components/Layout/Layout';
-import { asyncAddMessage } from '../../reducers/messagesReducer';
-import { getCurrentMessages } from '../../selectors/chatsSelectors';
+import {
+  getActiveMessages,
+  getCurrentMessages,
+  getIsFetching,
+} from '../../selectors/chatsSelectors';
+import Preloader from '../../components/Preloader/Preloader';
+import { fetchChats, addMessage } from '../../reducers/chatReducer';
 
 class Chats extends Component {
+  componentDidMount() {
+    const { fetchChats: asyncFetchChats } = this.props;
+    asyncFetchChats();
+  }
+
   submitMessage = ({ author, message }) => {
     const {
-      asyncAddMessage,
+      addMessage,
       match: {
         params: { id },
       },
     } = this.props;
-    asyncAddMessage({ author, message, chatId: id, id: uuidv4() });
+    addMessage({ author, message, chatId: id, id: uuidv4() });
   };
 
   render() {
-    const { messages } = this.props;
-
+    const { messages, activeMessages, isFetching } = this.props;
     return (
       <Layout>
-        <MessageList messages={messages} />
+        <Preloader open={isFetching} />
+        <MessageList messages={messages} activeMessages={activeMessages} />
         <FormMessage addMessage={this.submitMessage} />
       </Layout>
     );
@@ -38,7 +48,11 @@ Chats.propTypes = {
     params: PropTypes.objectOf(PropTypes.any),
   }).isRequired,
   messages: PropTypes.arrayOf(PropTypes.any).isRequired,
-  asyncAddMessage: PropTypes.func.isRequired,
+  activeMessages: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
+    .isRequired,
+  addMessage: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  fetchChats: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -49,11 +63,14 @@ const mapStateToProps = (state, ownProps) => {
   } = ownProps;
   return {
     messages: getCurrentMessages(state, id),
+    activeMessages: getActiveMessages(state),
+    isFetching: getIsFetching(state),
   };
 };
 
 const mapDispatchToProps = {
-  asyncAddMessage,
+  addMessage,
+  fetchChats,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chats);

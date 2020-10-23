@@ -5,6 +5,13 @@ const profileSlice = createSlice({
   initialState: {
     name: 'Dmitrii',
   },
+  reducers: {
+    setUserName: (_, { payload }) => {
+      return { name: payload };
+    },
+  },
 });
+
+export const { setUserName } = profileSlice.actions;
 
 export default profileSlice.reducer;

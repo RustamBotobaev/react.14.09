@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useSelector } from 'react-redux';
-
 import { AppBar, Button, makeStyles, Typography } from '@material-ui/core';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserName } from '../../features/profile/profileSlice';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -22,9 +23,21 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const fetchData = () => fetch('http://localhost:3004/profile').then(d => d.json());
+
 const Header = () => {
   const classes = useStyles();
   const { name } = useSelector(state => state.profile);
+  const dispatch = useDispatch();
+
+  const asyncFetchData = async () => {
+    const { firstName, lastName } = await fetchData();
+    dispatch(setUserName(`${firstName} ${lastName}`));
+  };
+
+  useEffect(() => {
+    asyncFetchData();
+  }, []);
 
   return (
     <AppBar className={classes.appBar}>

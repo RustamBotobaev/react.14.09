@@ -14,12 +14,11 @@ import {
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import CancelIcon from '@material-ui/icons/Cancel';
 import cn from 'classnames';
 import { NavLink, Link } from 'react-router-dom';
-import mockChats from './mockChats';
 import { useDispatch, useSelector } from 'react-redux';
-import { addChatToState } from '../../actions/chatActions';
-import { getChatsList } from '../../selectors/chatsSelectors';
+import { chatsSelector, deleteChat, postChat } from '../../reducers/chatReducer';
 
 const useStyles = makeStyles(theme => ({
     drawerPaper: {
@@ -49,11 +48,15 @@ const useStyles = makeStyles(theme => ({
 const ChatList = () => {
     const classes = useStyles();
 
-    const chats = useSelector(getChatsList);
+    const chats = useSelector(chatsSelector.selectAll);
     const dispatch = useDispatch();
 
     const addChat = () => {
-        dispatch(addChatToState());
+        dispatch(postChat());
+    };
+
+    const removeChat = id => {
+        dispatch(deleteChat(id));
     };
 
     return (
@@ -79,6 +82,9 @@ const ChatList = () => {
                             </ListItemIcon>
                             <ListItemText primary={title} />
                         </ListItem>
+                        <IconButton onClick={() => removeChat(id)}>
+                            <CancelIcon />
+                        </IconButton>
                     </NavLink>
                 ))}
             </List>

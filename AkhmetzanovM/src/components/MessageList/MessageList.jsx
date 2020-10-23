@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Message from '../Message';
 import PropTypes from 'prop-types';
 import { Container, makeStyles } from '@material-ui/core';
@@ -15,13 +15,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MessageList = ({ messages, userName }) => {
+let listRef;
+
+const MessageList = ({ messages, userName, newMessagesIds, deleteMessage }) => {
   const classes = useStyles();
 
+  listRef = useRef();
+
+  useEffect(() => {
+    const { current } = listRef;
+
+    if (current) {
+      current.scrollTo(0, current.scrollHeight);
+    }
+  }, [messages]);
+
   return (
-    <Container className={classes.list}>
+    <Container className={classes.list} ref={listRef}>
       {messages.map((message) => (
-        <Message key={message.id} message={message} userName={userName} />
+        <Message
+          key={message.id}
+          id={message.id}
+          message={message}
+          userName={userName}
+          highlighted={newMessagesIds.includes(message.id)}
+          deleteMessage={deleteMessage}
+        />
       ))}
     </Container>
   );
@@ -29,6 +48,8 @@ const MessageList = ({ messages, userName }) => {
 
 MessageList.propTypes = {
   userName: PropTypes.string.isRequired,
+  newMessagesIds: PropTypes.any.isRequired,
+  deleteMessage: PropTypes.func.isRequired,
   messages: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.any,
