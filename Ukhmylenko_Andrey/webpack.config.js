@@ -14,6 +14,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
+  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -47,12 +48,16 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: ['file-loader'],
+      },
     ],
   },
   devServer: {
     contentBase: path.join(__dirname, 'build'),
     compress: true,
-    port: 9000,
+    port: 9001,
     hot: true,
     historyApiFallback: true,
   },

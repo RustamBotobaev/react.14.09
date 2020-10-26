@@ -1,0 +1,10 @@
+.layout {
+  padding: 10px;
+  border-radius: 10px;
+  width: 1000px;
+  height: 90vh;
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+  background-color: royalblue;
+}

@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  padding: 5vh 0;
+  background-color: sandybrown;
+}
+
+body,
+p,
+button,
+textarea,
+textarea:placeholder-shown {
+  font-family: 'Forum', cursive;
+}
+
+li {
+  list-style: none;
+}
+
+button,
+textarea {
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+a {
+  text-decoration: none;
+}

@@ -1,44 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import { Box, makeStyles } from '@material-ui/core';
+import styles from './Message.module.css';
+import botImage from '../../assets/bot.jpg';
+import humanImage from '../../assets/profile.svg';
 
-const useStyles = makeStyles(theme => ({
-  messageClass: {
-    borderRadius: 4,
-    padding: theme.spacing(1),
-    color: theme.palette.common.white,
-    marginBottom: theme.spacing(1),
-  },
-  author: {
-    backgroundColor: theme.palette.primary.main,
-    marginLeft: 'auto',
-  },
-  bot: {
-    backgroundColor: theme.palette.primary.dark,
-    marginRight: 'auto',
-  },
-}));
-
-const Message = ({ author, message }) => {
-  const classes = useStyles();
-
+const Message = props => {
+  const { author, message, isActive } = props;
   return (
-    <Box
-      component="li"
-      className={cn(classes.messageClass, {
-        [classes.author]: author !== 'Bot',
-        [classes.bot]: author === 'Bot',
-      })}
+    <li
+      className={cn(
+        styles.message,
+        author === 'Bot' ? styles.message__bot : styles.message__human,
+        isActive && styles.message__active,
+      )}
     >
-      <span>{`${author}: ${message}`}</span>
-    </Box>
+      <img
+        className={styles.message__userpic}
+        src={author === 'Bot' ? botImage : humanImage}
+        alt="userpic"
+      />
+      <p
+        className={cn(
+          styles.message__content,
+          author === 'Bot' ? styles.message__content_bot : styles.message__content_human,
+        )}
+      >
+        {`${author}: ${message}`}
+      </p>
+    </li>
   );
 };
 
 Message.propTypes = {
   author: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
+  isActive: PropTypes.bool.isRequired,
 };
 
 export default Message;

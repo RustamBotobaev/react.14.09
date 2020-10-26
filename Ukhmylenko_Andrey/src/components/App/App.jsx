@@ -1,28 +1,18 @@
 import React from 'react';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { CssBaseline } from '@material-ui/core';
+import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import RootRouter from '../../pages/RootRouter/RootRouter';
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#001285',
-    },
-    secondary: {
-      main: '#ff9900',
-    },
-  },
-});
+import store from '../../store';
+import RootRouter from '../../pages/RootRouter';
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <RootRouter />
-      </ThemeProvider>
-    </BrowserRouter>
+    <>
+      <Provider store={store}>
+        <BrowserRouter>
+          <RootRouter />
+        </BrowserRouter>
+      </Provider>
+    </>
   );
 };
 

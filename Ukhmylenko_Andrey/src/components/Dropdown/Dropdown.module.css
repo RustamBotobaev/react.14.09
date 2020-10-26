@@ -1,0 +1,18 @@
+.link {
+  padding: 0 10px;
+  display: block;
+  line-height: 24px;
+  color: white;
+}
+
+.link:hover {
+  color: royalblue;
+}
+
+.divider {
+  height: 2px;
+}
+
+.logout_link {
+  padding-top: 10px;
+}

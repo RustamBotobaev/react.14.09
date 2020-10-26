@@ -1,5 +1,5 @@
 {
-  "name": "ukhmylenko_a",
+  "name": "chat_app",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,17 +10,21 @@
     "lint": "eslint --fix \"src/**/*.js?(x)\"",
     "prettier": "prettier --write \"src/**/*.js?(x)\""
   },
-  "author": "",
+  "author": "ukhmylenko_a",
   "license": "ISC",
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
+    "@reduxjs/toolkit": "^1.4.0",
     "classnames": "^2.2.6",
+    "hyphenated": "^1.2.0",
+    "hyphenated-ru": "^1.2.0",
     "immer": "^7.0.9",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
+    "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
@@ -40,6 +44,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^4.1.2",
+    "file-loader": "^6.1.1",
     "html-webpack-plugin": "^4.4.1",
     "mini-css-extract-plugin": "^0.11.2",
     "prettier": "^2.1.2",

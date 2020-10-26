@@ -1,0 +1,12 @@
+.error_page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.message {
+  -webkit-text-stroke: 1px red;
+  font-size: 36px;
+  color: darkgray;
+  padding-left: 20px;
+}
